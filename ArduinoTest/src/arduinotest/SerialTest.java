@@ -14,14 +14,14 @@ public class SerialTest implements SerialPortEventListener {
 	SerialPort serialPort;
         /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
-			"/dev/cu.usbmodem1421", // Mac OS X
+			"/dev/cu.usbmodem1421", // Mac Duygu
 			"COM5", // Windows Liza
                         "COM4", // Windows Ketura
 	};
 	/**
 	* A BufferedReader which will be fed by a InputStreamReader 
 	* converting the bytes into characters 
-	* making the displayed results codepage independent
+	* making the displayed results code page independent
 	*/
 	private BufferedReader input;
 	/** The output stream to the port */
