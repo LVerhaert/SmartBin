@@ -7,6 +7,7 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener; 
+import java.io.IOException;
 import java.util.Enumeration;
 
 
@@ -96,7 +97,7 @@ public class SerialTest implements SerialPortEventListener {
 			try {
 				String inputLine=input.readLine();
 				System.out.println(inputLine);
-			} catch (Exception e) {
+			} catch (IOException e) {
 				System.err.println(e.toString());
 			}
 		}
