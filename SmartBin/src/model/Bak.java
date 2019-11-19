@@ -13,20 +13,16 @@ public class Bak {
     
     private int baknr;
     private int gewichtsensor;
-    private int afstandsensor;
     private String dekselpos;
     private String ledkleur;
     private String baktype;
-    private boolean vol;
     
-    public Bak (int baknr, int gewichtsensor, int afstandsensor, String dekselpos, String ledkleur, String baktype, boolean vol) {
+    public Bak (int baknr, int gewichtsensor, String dekselpos, String ledkleur, String baktype) {
         this.baknr = baknr;
         this.gewichtsensor = gewichtsensor;
-        this.afstandsensor = afstandsensor;
         this.dekselpos = dekselpos;
         this.ledkleur = ledkleur;
         this.baktype = baktype;
-        this.vol = vol;
     }
 
     public int getBaknr() {
@@ -43,14 +39,6 @@ public class Bak {
 
     public void setGewichtsensor(int gewichtsensor) {
         this.gewichtsensor = gewichtsensor;
-    }
-
-    public int getAfstandsensor() {
-        return afstandsensor;
-    }
-
-    public void setAfstandsensor(int afstandsensor) {
-        this.afstandsensor = afstandsensor;
     }
 
     public String getDekselpos() {
@@ -108,13 +96,4 @@ public class Bak {
         this.baktype = baktype;
     }
 
-    public boolean isVol() {
-        return vol;
-    }
-
-    public void setVol(boolean vol) {
-        this.vol = vol;
-    }
-    
-    
 }
