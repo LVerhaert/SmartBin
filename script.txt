@@ -1,0 +1,98 @@
+drop table bak cascade;
+drop table afvalinbak cascade;
+drop table afval cascade;
+drop table baktype cascade;
+
+CREATE TABLE baktype
+	(   type TEXT PRIMARY KEY
+	);
+
+INSERT INTO baktype VALUES ('gft');
+INSERT INTO baktype VALUES ('plastic');
+INSERT INTO baktype VALUES ('glas wit');
+INSERT INTO baktype VALUES ('glas kleur');
+INSERT INTO baktype VALUES ('overig');
+
+
+CREATE TABLE afvalinbak
+	(   afvaltype TEXT PRIMARY KEY
+	  , baktype   TEXT NOT NULL
+	  , FOREIGN KEY (baktype) REFERENCES baktype (type)
+	);
+
+INSERT INTO afvalinbak VALUES ('gft','gft');
+INSERT INTO afvalinbak VALUES ('papier','overig');
+INSERT INTO afvalinbak VALUES ('glas wit','glas wit');
+INSERT INTO afvalinbak VALUES ('glas kleur','glas kleur');
+INSERT INTO afvalinbak VALUES ('blik','overig');
+INSERT INTO afvalinbak VALUES ('plastic','plastic');
+
+
+CREATE TABLE afval
+	(   afvalnr     INT PRIMARY KEY
+	  , chipnr      TEXT NOT NULL UNIQUE
+	  , kleurwaarde INT
+	  , afvaltype   TEXT NOT NULL
+	  , FOREIGN KEY (afvaltype) REFERENCES afvalinbak (afvaltype)
+	);
+
+INSERT INTO afval VALUES (1, 'x04 x6C x89 xA2 x7A x22 x80', 23,'glas wit'); --Liza Radboud
+INSERT INTO afval VALUES (2, 'x08 x41 x3C x24', 456,'glas kleur'); --Liza ID
+INSERT INTO afval VALUES (3, 'x08 x42 x6E x79', null,'plastic'); --Liza Rijbewijs
+INSERT INTO afval VALUES (4, 'x05 x0B x8D xE0 xE0 x00 x00', null,'gft'); --Liza Afvalpas
+INSERT INTO afval VALUES (5, 'xC7 x75 x55 xA3', null,'papier'); --Liza OV geel
+INSERT INTO afval VALUES (6, 'x11 xC3 x9F x03', null,'blik'); --Ketura OV geel*
+INSERT INTO afval VALUES (7, 'xD1 x78 x76 x03', null,'blik'); --Ketura OV geel
+INSERT INTO afval VALUES (8, '1234', null,'gft'); --Ketura OV blauw
+INSERT INTO afval VALUES (9, 'x08 xF6 x08 x2F', null,'plastic'); --Ketura ID
+INSERT INTO afval VALUES (10, 'x41 x4E xDB x07', 483,'glas kleur'); --Duygu OV geel
+
+
+CREATE TABLE bak
+	(   baknr         INT PRIMARY KEY
+	  , gewichtsensor INT NOT NULL UNIQUE
+	  , dekselpos     TEXT NOT NULL
+    , ledkleur      TEXT NOT NULL
+	  , baktype       TEXT UNIQUE NOT NULL
+	  , FOREIGN KEY (baktype) REFERENCES baktype (type)
+	);
+
+INSERT INTO bak VALUES
+	( 1
+	  , 1
+	  ,'dicht'
+	  ,'groen'
+	  ,'plastic'
+	);
+
+INSERT INTO bak VALUES
+	( 2
+	  , 2
+	  ,'dicht'
+	  ,'groen'
+	  ,'overig'
+	);
+
+INSERT INTO bak VALUES
+	( 3
+	  , 3
+	  ,'dicht'
+	  ,'groen'
+	  ,'glas kleur'
+	);
+
+INSERT INTO bak VALUES
+	( 4
+	  , 4
+	  ,'dicht'
+	  ,'groen'
+	  ,'glas wit'
+	);
+
+INSERT INTO bak VALUES
+	( 5
+	  , 5
+	  ,'dicht'
+	  ,'groen'
+	  ,'gft'
+	);
