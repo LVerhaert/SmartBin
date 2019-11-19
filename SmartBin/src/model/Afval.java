@@ -12,14 +12,18 @@ package model;
 public class Afval {
     private int afvalnr;
     private String chipnr;
-    private int kleurwaarde;
     private String afvaltype;
+    private int kleurr;
+    private int kleurg;
+    private int kleurb;
     
-    public Afval(int afvalnr, String chipnr, int kleurwaarde, String afvaltype) {
+    public Afval(int afvalnr, String chipnr, String afvaltype, int kleurr, int kleurg, int kleurb) {
         this.afvalnr = afvalnr;
         this.chipnr = chipnr;
-        this.kleurwaarde = kleurwaarde;
         this.afvaltype = afvaltype;
+        this.kleurr = kleurr;
+        this.kleurg = kleurg;
+        this.kleurb = kleurb;
     }
 
     public int getAfvalnr() {
@@ -38,20 +42,22 @@ public class Afval {
         this.chipnr = chipnr;
     }
 
-    public int getKleurwaarde() {
-        return kleurwaarde;
-    }
-
-    public void setKleurwaarde(int kleurwaarde) {
-        this.kleurwaarde = kleurwaarde;
-    }
-    
     public String getAfvaltype() {
         return afvaltype;
     }
 
     public void setAfvaltype(String afvaltype) {
         this.afvaltype = afvaltype;
+    }
+    
+    public String getKleur() {
+        return "(" + kleurr + "," + kleurg + "," + kleurb + ")";
+    }
+
+    public void setKleur(int kleurr, int kleurg, int kleurb) {
+        this.kleurr = kleurr;
+        this.kleurg = kleurg;
+        this.kleurb = kleurb;
     }
     
     
