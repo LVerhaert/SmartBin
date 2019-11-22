@@ -11,9 +11,12 @@ Week 4 (25/11)
   - chipsensor; liza
   - servo + led; -/+ gezamenlijk
   
-- vrijdag
+- dinsdag (hardware)
   - prullenbakken op staaf
   - staaf op plaat
+  - gaatje voor touwtje
+  - servo vastmaken
+  - led vastmaken
   
 
 Week 5 (02/12)
