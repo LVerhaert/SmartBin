@@ -32,7 +32,7 @@ public class SerialConnector implements SerialPortEventListener {
     // Default bits per second for COM port
     private static final int DATA_RATE = 9600;
 
-    public void initialize() {
+    public boolean initialize() {
 
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -49,7 +49,7 @@ public class SerialConnector implements SerialPortEventListener {
         }
         if (portId == null) {
             System.out.println("Could not find COM port.");
-            return;
+            return false;
         }
 
         try {
@@ -73,6 +73,7 @@ public class SerialConnector implements SerialPortEventListener {
         } catch (Exception e) {
             System.err.println(e.toString());
         }
+        return true;
     }
 
     /**
@@ -89,6 +90,7 @@ public class SerialConnector implements SerialPortEventListener {
     /**
      * Handle an event on the serial port. Read the data and print it.
      */
+    @Override
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
@@ -101,21 +103,22 @@ public class SerialConnector implements SerialPortEventListener {
         // Ignore all the other eventTypes, but you should consider the other ones.
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void execute() throws Exception {
         SerialConnector main = new SerialConnector();
-        main.initialize();
-        Thread t = new Thread() {
-            public void run() {
-                // the following line will keep this app alive for 1000 seconds,
-                // waiting for events to occur and responding to them (printing
-                // incoming messages to console).
-                try {
-                    Thread.sleep(1000000);
-                } catch (InterruptedException ie) {
+        if (main.initialize()) {
+            Thread t = new Thread() {
+                public void run() {
+                    // the following line will keep this app alive for 1000 seconds,
+                    // waiting for events to occur and responding to them (printing
+                    // incoming messages to console).
+                    try {
+                        Thread.sleep(1000000);
+                    } catch (InterruptedException ie) {
+                    }
                 }
-            }
-        };
-        t.start();
-        System.out.println("Started");
+            };
+            t.start();
+            System.out.println("Started");
+        }
     }
 }
