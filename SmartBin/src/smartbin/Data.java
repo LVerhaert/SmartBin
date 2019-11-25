@@ -21,10 +21,10 @@ public class Data {
     private ArrayList<AfvalInBak> afvalinbakken;
     private ArrayList<Bak> bakken;
     
-    private DBConnector connector;
+    private DBCommunicator connector;
     
     public Data() {
-        connector = new DBConnector();
+        connector = new DBCommunicator();
         
         resetAfval();
         resetAfvalinbakken();
@@ -84,8 +84,4 @@ public class Data {
             System.err.println(e.getMessage());
         }
     }
-    
-    
-    
-    
 }

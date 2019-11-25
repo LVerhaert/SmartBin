@@ -1,15 +1,18 @@
-package arduinotest;
+package sensors;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Enumeration;
 
-public class SerialTest implements SerialPortEventListener {
+/**
+ * @author Unknown
+ */
+public class SerialConnector implements SerialPortEventListener {
 
     SerialPort serialPort;
     // The port we're normally going to use.
@@ -21,7 +24,7 @@ public class SerialTest implements SerialPortEventListener {
     };
     // A BufferedReader which will be fed by an InputStreamReader converting the
     // bytes into characters making the displayed results codepage independent
-    private BufferedReader input;
+    protected BufferedReader input;
     // The output stream to the port
     private OutputStream output;
     // Milliseconds to block while waiting for port open
@@ -99,7 +102,7 @@ public class SerialTest implements SerialPortEventListener {
     }
 
     public static void main(String[] args) throws Exception {
-        SerialTest main = new SerialTest();
+        SerialConnector main = new SerialConnector();
         main.initialize();
         Thread t = new Thread() {
             public void run() {
