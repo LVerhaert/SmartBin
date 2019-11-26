@@ -12,12 +12,13 @@ import java.util.regex.Pattern;
 public class RFIDSensor extends SerialConnector {
 
     // het chipnummer dat ik uit de inputLine haal
-    private String chipnr;
+    private static String chipnr;
     // reguliere expressie die nodig is om het chipnummer uit de inputLine te halen:
     // "x01 x02 x03 ..." is wat ik zoek, dus "(x\d\d\s)" één of meerdere keren
     // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
-    private final String REGEX = "(x\\d\\d\\s)+";
+//    private final String REGEX = "(0x[\\d\\w][\\d\\w]\\s)+";
+    private final String REGEX = "(\\s0x[ABCDEF0123456789][ABCDEF0123456789])+";
     
     /**
      * @Override serialEvent van de superklasse. Ik heb deze methode aangepast 
@@ -39,11 +40,16 @@ public class RFIDSensor extends SerialConnector {
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr
                     System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
+                    System.out.println(matcher.find());
                  }
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
         }
+    }
+    
+    public static String getChipnr() {
+        return chipnr;
     }
     
 }

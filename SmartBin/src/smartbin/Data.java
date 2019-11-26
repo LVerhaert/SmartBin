@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package smartbin;
 
 import java.sql.ResultSet;
@@ -21,10 +16,10 @@ public class Data {
     private ArrayList<AfvalInBak> afvalinbakken;
     private ArrayList<Bak> bakken;
     
-    private DBCommunicator connector;
+    private DBCommunicator dbcommunicator;
     
     public Data() {
-        connector = new DBCommunicator();
+        dbcommunicator = new DBCommunicator();
         
         resetAfval();
         resetAfvalinbakken();
@@ -35,7 +30,7 @@ public class Data {
     private void resetAfval() {
         afval = new ArrayList<>();
         String strSQL = "select * from afval";
-        ResultSet dbResult = connector.getData(strSQL);
+        ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
                 int afvalnr = dbResult.getInt("afvalnr");
@@ -44,7 +39,7 @@ public class Data {
                 int kleurr = dbResult.getInt("kleurr");
                 int kleurg = dbResult.getInt("kleurg");
                 int kleurb = dbResult.getInt("kleurb");
-                afval.add(new Afval(afvalnr, chipnr, afvaltype, kleurr, kleurg, kleurb));
+                afval.add(new Afval(/*afvalnr, */chipnr, afvaltype, kleurr, kleurg, kleurb));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -55,7 +50,7 @@ public class Data {
     private void resetAfvalinbakken() {
         afvalinbakken = new ArrayList<>();
         String strSQL = "select * from afvalinbak";
-        ResultSet dbResult = connector.getData(strSQL);
+        ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
                 String afvaltype = dbResult.getString("afvaltype");
@@ -70,7 +65,7 @@ public class Data {
     private void resetBakken() {
         bakken = new ArrayList<>();
         String strSQL = "select * from bak";
-        ResultSet dbResult = connector.getData(strSQL);
+        ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
                 int baknr = dbResult.getInt("baknr");
@@ -84,4 +79,43 @@ public class Data {
             System.err.println(e.getMessage());
         }
     }
+    
+    public void addAfval(Afval a) {
+        afval.add(a);
+    }
+
+    public Afval getAfvalViaKleur(String kleur) {
+        for (Afval a : afval) {
+            if (kleur.equals(a.getKleur())) {
+                return a;
+            }
+        }
+        System.out.println("Geen afval met deze kleur gevonden.");
+        return null;
+    }
+
+    public Afval getAfvalViaChipnr(String chipnr) {
+        for (Afval a : afval) {
+            if (chipnr.equals(a.getChipnr())) {
+                return a;
+            }
+        }
+        System.out.println("Geen afval met dit chipnummer gevonden.");
+        return null;
+    }
+
+    public int getBak(String baktype) {
+        for (Bak b : bakken) {
+            if (baktype.equals(b.getBaktype())) {
+                return b.getBaknr();
+            }
+        }
+        System.out.println("Geen bak met dit type gevonden.");
+        return 0;
+    }
+
+    public String getAfvalInWelkeBak(String afvalType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
