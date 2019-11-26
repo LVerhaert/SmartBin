@@ -8,12 +8,12 @@ import javafx.scene.control.Alert.AlertType;
  * Deze klasse communiceert met de database
  * @author aangepast door Liza Verhaert
  */
-public class DBConnector {
+public class DBCommunicator {
 
     /**
      * Constructor.
      */
-    public DBConnector() {
+    public DBCommunicator() {
     }
 
     /**
