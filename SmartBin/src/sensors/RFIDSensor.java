@@ -17,8 +17,7 @@ public class RFIDSensor extends SerialConnector {
     // "x01 x02 x03 ..." is wat ik zoek, dus "(x\d\d\s)" één of meerdere keren
     // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
-//    private final String REGEX = "(0x[\\d\\w][\\d\\w]\\s)+";
-    private final String REGEX = "(\\s0x[ABCDEF0123456789][ABCDEF0123456789])+";
+    private final String REGEX = "(\\s0x[\\d\\w][\\d\\w]\\s)+";
     
     /**
      * @Override serialEvent van de superklasse. Ik heb deze methode aangepast 
@@ -36,7 +35,8 @@ public class RFIDSensor extends SerialConnector {
             try {
                 String inputLine = input.readLine();
                 System.out.println(inputLine);
-                Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
+                Matcher matcher = pattern.matcher("UID Value: 0xC7 0x75 0x55 0xA3");
+//                Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr
                     System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
