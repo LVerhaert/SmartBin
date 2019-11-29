@@ -1,6 +1,8 @@
 package smartbin;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -8,12 +10,14 @@ import javafx.scene.control.Alert.AlertType;
  * Deze klasse communiceert met de database
  * @author aangepast door Liza Verhaert
  */
-public class DBConnector {
+public class DBCommunicator {
 
+    private Connection conn;
+    
     /**
      * Constructor.
      */
-    public DBConnector() {
+    public DBCommunicator() {
     }
 
     /**
@@ -21,7 +25,7 @@ public class DBConnector {
      * @return gelegde verbinding
      */
     private Connection createConnection() {
-        Connection conn = null;
+        conn = null;
         try {
             Class.forName("org.postgresql.Driver");
             String url = "jdbc:postgresql://salt.db.elephantsql.com/uwjguczg";
@@ -50,6 +54,7 @@ public class DBConnector {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+        closeConnection();
         return result;
     }
 
@@ -86,6 +91,17 @@ public class DBConnector {
                 System.err.println(e.getMessage());
             }
         }
+        closeConnection();
         return result;
+    }
+
+    private void closeConnection() {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBCommunicator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

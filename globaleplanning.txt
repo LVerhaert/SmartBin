@@ -1,0 +1,41 @@
+Week 3 (18/11) 
+Voorbereidend werk:
+- database aanpassen
+- model klassen
+
+
+Week 4 (25/11)
+- programmeren
+  - kleurensensor; duygu
+  - gewichtssensor; ketura
+  - chipsensor; liza
+  - servo + led; -/+ gezamenlijk
+  
+- dinsdag (hardware)
+  - prullenbakken op staaf
+  - staaf op plaat
+  - gaatje voor touwtje
+  - servo vastmaken
+  - led vastmaken
+  
+
+Week 5 (02/12)
+
+
+week 6 (09/12)
+
+
+Week 7 (16/12)
+
+
+--- Kertsvakantie (23/12 + 30/12)
+
+
+Week 8 (06/01)
+
+
+Week 9 (13/01)
+
+
+Week 10 (20/01) 
+- opleveren 24 januari
