@@ -21,13 +21,13 @@ public class SmartBin {
 //        SerialConnector.execute();
 
 //        while (true) {
-//            verwerkAfval(data);
+            verwerkAfval(data);
 //        }
         
         /**
          * Liza
          */
-        RFIDSensor.execute(115200);
+//        RFIDSensor.execute(115200);
 
         /**
          * Duygu
@@ -48,9 +48,13 @@ public class SmartBin {
         int baknr = 0;
         String afvalType = "error";
         String bakType = "error";
+        String chipnr = "";
         try {
-            RFIDSensor.execute(115200);
-            String chipnr = RFIDSensor.getChipnr();
+            do {
+                RFIDSensor.execute(115200);
+                chipnr = RFIDSensor.getChipnr();
+            } while (chipnr == "");
+            
             Afval afval = data.getAfvalViaChipnr(chipnr);
             if (afval.getKleur().equals("(0, 0, 0)")) { // als er geen kleur nodig is
                 afvalType = afval.getAfvaltype();
