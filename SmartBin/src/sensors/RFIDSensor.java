@@ -43,7 +43,9 @@ public class RFIDSensor extends SerialConnector {
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
+            
         }
+        
     }
     
 }
