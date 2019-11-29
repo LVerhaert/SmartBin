@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 /**
@@ -10,15 +5,15 @@ package model;
  * @author Liza Verhaert
  */
 public class Afval {
-    private int afvalnr;
-    private String chipnr;
-    private String afvaltype;
-    private int kleurr;
-    private int kleurg;
-    private int kleurb;
+//    private int afvalnr = 0;
+    private String chipnr = "";
+    private String afvaltype = "";
+    private int kleurr = 0;
+    private int kleurg = 0;
+    private int kleurb = 0;
     
-    public Afval(int afvalnr, String chipnr, String afvaltype, int kleurr, int kleurg, int kleurb) {
-        this.afvalnr = afvalnr;
+    public Afval(/*int afvalnr, */String chipnr, String afvaltype, int kleurr, int kleurg, int kleurb) {
+//        this.afvalnr = afvalnr;
         this.chipnr = chipnr;
         this.afvaltype = afvaltype;
         this.kleurr = kleurr;
@@ -26,13 +21,17 @@ public class Afval {
         this.kleurb = kleurb;
     }
 
-    public int getAfvalnr() {
-        return afvalnr;
+    public Afval(String chipnr) {
+        this.chipnr = chipnr;
     }
-
-    public void setAfvalnr(int afvalnr) {
-        this.afvalnr = afvalnr;
-    }
+            
+//    public int getAfvalnr() {
+//        return afvalnr;
+//    }
+//
+//    public void setAfvalnr(int afvalnr) {
+//        this.afvalnr = afvalnr;
+//    }
 
     public String getChipnr() {
         return chipnr;
