@@ -8,6 +8,7 @@ import sensors.SerialConnector;
 
 /**
  * Main klasse
+ *
  * @author Liza Verhaert
  */
 public class SmartBin {
@@ -23,7 +24,6 @@ public class SmartBin {
 //        while (true) {
 //            verwerkAfval(data);
 //        }
-        
         /**
          * Liza
          */
@@ -33,16 +33,14 @@ public class SmartBin {
          * Duygu
          */
 //        KleurenSensor.execute();
-
         /**
          * Ketura
          */
 //        GewichtSensor.execute();
-
     }
 
     /**
-     * Werkt alleen met in de database bekende stukken afval.
+     * Werkt alleen met in de database bekende stukken afval. Work in progress..
      */
     private static void verwerkAfval(Data data) {
         int baknr = 0;
@@ -63,14 +61,13 @@ public class SmartBin {
             bakType = data.getAfvalInWelkeBak(afvalType);
             baknr = data.getBak(bakType);
             System.out.println("Afval met type " + afvalType + " in bak #" + baknr + " met type " + bakType); // tijdelijk, om te kijken of het werkt
-            
+
 //            openBak(bakType); // vindt en opent de juiste bak op basis van baktype, zet lampjes om, etc.
 //            sluitBak(); // sluit de bak die open is gegaan, na toename van gewicht, zet lampjes om, etc.
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
-        
-        
+
     }
-    
+
 }
