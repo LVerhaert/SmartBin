@@ -12,12 +12,12 @@ import java.util.regex.Pattern;
 public class RFIDSensor extends SerialConnector {
 
     // het chipnummer dat ik uit de inputLine haal
-    private static String chipnr;
+    private static String chipnr = "";
     // reguliere expressie die nodig is om het chipnummer uit de inputLine te halen:
     // "x01 x02 x03 ..." is wat ik zoek, dus "(x\d\d\s)" één of meerdere keren
     // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
-    private final String REGEX = "(\\s0x[\\d\\w][\\d\\w]\\s)+";
+    private final String REGEX = "(\\s0x[\\d\\w][\\d\\w])+";
     
     /**
      * @Override serialEvent van de superklasse. Ik heb deze methode aangepast 
@@ -30,17 +30,14 @@ public class RFIDSensor extends SerialConnector {
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         // Opzetten van de pattern om de reguliere expressie te gebruiken
         Pattern pattern = Pattern.compile(REGEX);
-
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = input.readLine();
                 System.out.println(inputLine);
-                Matcher matcher = pattern.matcher("UID Value: 0xC7 0x75 0x55 0xA3");
-//                Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
+                Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr
                     System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
-                    System.out.println(matcher.find());
                  }
             } catch (Exception e) {
                 System.err.println(e.toString());
@@ -48,6 +45,25 @@ public class RFIDSensor extends SerialConnector {
         }
     }
     
+    public static void execute(int BAUD_RATE) throws Exception {
+        RFIDSensor main = new RFIDSensor();
+        if (main.initialize(BAUD_RATE)) {
+            Thread t = new Thread() {
+                public void run() {
+                    // the following line will keep this app alive for 1000 seconds,
+                    // waiting for events to occur and responding to them (printing
+                    // incoming messages to console).
+                    try {
+                        Thread.sleep(1000000);
+                    } catch (InterruptedException ie) {
+                    }
+                }
+            };
+            t.start();
+            System.out.println("Started");
+        }
+    }
+
     public static String getChipnr() {
         return chipnr;
     }

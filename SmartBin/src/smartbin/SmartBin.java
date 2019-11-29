@@ -27,7 +27,7 @@ public class SmartBin {
         /**
          * Liza
          */
-        RFIDSensor.execute();
+        RFIDSensor.execute(115200);
 
         /**
          * Duygu
@@ -49,7 +49,7 @@ public class SmartBin {
         String afvalType = "error";
         String bakType = "error";
         try {
-            RFIDSensor.execute();
+            RFIDSensor.execute(115200);
             String chipnr = RFIDSensor.getChipnr();
             Afval afval = data.getAfvalViaChipnr(chipnr);
             if (afval.getKleur().equals("(0, 0, 0)")) { // als er geen kleur nodig is

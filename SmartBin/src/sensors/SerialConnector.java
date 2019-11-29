@@ -31,10 +31,8 @@ public class SerialConnector implements SerialPortEventListener {
     // Milliseconds to block while waiting for port open
     private static final int TIME_OUT = 2000;
     // Default bits per second for COM port
-//    private static final int DATA_RATE = 9600;
-    private static final int DATA_RATE = 115200;
 
-    public boolean initialize() {
+    public boolean initialize(int DATA_RATE) {
 
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -102,12 +100,11 @@ public class SerialConnector implements SerialPortEventListener {
                 System.err.println(e.toString());
             }
         }
-        // Ignore all the other eventTypes, but you should consider the other ones.
     }
 
-    public static void execute() throws Exception {
+    public static void execute(int BAUD_RATE) throws Exception {
         SerialConnector main = new SerialConnector();
-        if (main.initialize()) {
+        if (main.initialize(BAUD_RATE)) {
             Thread t = new Thread() {
                 public void run() {
                     // the following line will keep this app alive for 1000 seconds,
