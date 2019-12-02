@@ -12,12 +12,12 @@ import java.util.regex.Pattern;
 public class RFIDSensor extends SerialConnector {
 
     // het chipnummer dat ik uit de inputLine haal
-    private String chipnr;
+    private static String chipnr = "";
     // reguliere expressie die nodig is om het chipnummer uit de inputLine te halen:
     // "x01 x02 x03 ..." is wat ik zoek, dus "(x\d\d\s)" één of meerdere keren
     // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
-    private final String REGEX = "(x\\d\\d\\s)+";
+    private final String REGEX = "(\\s0x[\\d\\w][\\d\\w])+";
     
     /**
      * @Override serialEvent van de superklasse. Ik heb deze methode aangepast 
@@ -30,7 +30,6 @@ public class RFIDSensor extends SerialConnector {
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         // Opzetten van de pattern om de reguliere expressie te gebruiken
         Pattern pattern = Pattern.compile(REGEX);
-
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = input.readLine();
@@ -44,6 +43,29 @@ public class RFIDSensor extends SerialConnector {
                 System.err.println(e.toString());
             }
         }
+    }
+    
+    public static void execute(int BAUD_RATE) throws Exception {
+        RFIDSensor main = new RFIDSensor();
+        if (main.initialize(BAUD_RATE)) {
+            Thread t = new Thread() {
+                public void run() {
+                    // the following line will keep this app alive for 1000 seconds,
+                    // waiting for events to occur and responding to them (printing
+                    // incoming messages to console).
+                    try {
+                        Thread.sleep(1000000);
+                    } catch (InterruptedException ie) {
+                    }
+                }
+            };
+            t.start();
+            System.out.println("Started");
+        }
+    }
+
+    public static String getChipnr() {
+        return chipnr;
     }
     
 }

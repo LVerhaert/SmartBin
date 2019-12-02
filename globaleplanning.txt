@@ -1,22 +1,41 @@
-To do:
-week 3: 
+Week 3 (18/11) 
 Voorbereidend werk:
-- Database aanpassen, model klassen
-- Door Bart onze prullenbakken in orde laten maken, gewichten op de staaf etc.
-
-week 4: 
-Beginnen met programmeren
-
-week 5:
-
-week 6:
-
-Week 7:
-
-Week 8:
-
-Week 10:
+- database aanpassen
+- model klassen
 
 
-Opleveren 20 januari
+Week 4 (25/11)
+- programmeren
+  - kleurensensor; duygu
+  - gewichtssensor; ketura
+  - chipsensor; liza
+  - servo + led; -/+ gezamenlijk
+  
+- dinsdag (hardware)
+  - prullenbakken op staaf
+  - staaf op plaat
+  - gaatje voor touwtje
+  - servo vastmaken
+  - led vastmaken
+  
 
+Week 5 (02/12)
+
+
+week 6 (09/12)
+
+
+Week 7 (16/12)
+
+
+--- Kertsvakantie (23/12 + 30/12)
+
+
+Week 8 (06/01)
+
+
+Week 9 (13/01)
+
+
+Week 10 (20/01) 
+- opleveren 24 januari
