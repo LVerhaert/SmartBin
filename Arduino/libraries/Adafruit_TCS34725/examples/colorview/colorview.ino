@@ -10,7 +10,7 @@
 // for common cathode, connect the common to ground
 
 // set to false if using a common cathode LED
-#define commonAnode true
+#define commonAnode false
 
 // our RGB -> eye-recognized gamma color
 byte gammatable[256];
