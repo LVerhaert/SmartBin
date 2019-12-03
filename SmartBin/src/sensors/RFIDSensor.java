@@ -37,6 +37,7 @@ public class RFIDSensor extends SerialConnector {
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr
+                    chipnr = chipnr.substring(1);
                     System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
                  }
             } catch (Exception e) {

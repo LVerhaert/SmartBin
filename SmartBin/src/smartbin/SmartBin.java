@@ -46,8 +46,8 @@ public class SmartBin {
      */
     private static void verwerkAfval(Data data) {
         int baknr = 0;
-        String afvalType = "error";
-        String bakType = "error";
+        String afvaltype = "error";
+        String baktype = "error";
         String chipnr = "";
         try {
             do {
@@ -57,16 +57,17 @@ public class SmartBin {
             
             Afval afval = data.getAfvalViaChipnr(chipnr);
             if (afval.getKleur().equals("(0, 0, 0)")) { // als er geen kleur nodig is
-                afvalType = afval.getAfvaltype();
+                afvaltype = afval.getAfvaltype();
             } else { // als er wel een kleur nodig is
 //                KleurenSensor.execute();
 //                String kleur = KleurenSensor.getKleur();
 //                afval = data.getAfvalViaKleur(kleur);
-//                afvalType = afval.getAfvaltype();
+//                afvaltype = afval.getAfvaltype();
             }
-            bakType = data.getAfvalInWelkeBak(afvalType);
-            baknr = data.getBak(bakType);
-            System.out.println("Afval met type " + afvalType + " in bak #" + baknr + " met type " + bakType); // tijdelijk, om te kijken of het werkt
+            System.out.println(afvaltype);
+            baktype = data.getAfvalInWelkeBak(afvaltype);
+            baknr = data.getBak(baktype);
+            System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
             
 //            openBak(bakType); // vindt en opent de juiste bak op basis van baktype, zet lampjes om, etc.
 //            sluitBak(); // sluit de bak die open is gegaan, na toename van gewicht, zet lampjes om, etc.

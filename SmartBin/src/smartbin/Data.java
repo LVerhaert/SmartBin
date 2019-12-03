@@ -114,8 +114,14 @@ public class Data {
         return 0;
     }
 
-    public String getAfvalInWelkeBak(String afvalType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getAfvalInWelkeBak(String afvaltype) {
+        for (AfvalInBak aib : afvalinbakken) {
+            if (afvaltype.equals(aib.getAfvaltype())) {
+                return aib.getBaktype();
+            }
+        }
+        System.out.println("Ik weet niet in welk baktype dit type afval moet.");
+        return null;
     }
 
 }
