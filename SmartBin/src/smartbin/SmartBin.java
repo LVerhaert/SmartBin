@@ -3,11 +3,14 @@ package smartbin;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Afval;
+import sensors.GewichtSensor;
+import sensors.KleurSensor;
 import sensors.RFIDSensor;
 import sensors.SerialConnector;
 
 /**
  * Main klasse
+ *
  * @author Liza Verhaert
  */
 public class SmartBin {
@@ -23,26 +26,23 @@ public class SmartBin {
 //        while (true) {
             verwerkAfval(data);
 //        }
-        
         /**
          * Liza
          */
-//        RFIDSensor.execute(115200);
+        //RFIDSensor.execute(115200);
 
         /**
          * Duygu
          */
-//        KleurenSensor.execute();
-
+//        KleurSensor.execute(9600);
         /**
          * Ketura
          */
-//        GewichtSensor.execute();
-
+//        GewichtSensor.execute(9600);
     }
 
     /**
-     * Werkt alleen met in de database bekende stukken afval.
+     * Werkt alleen met in de database bekende stukken afval. Work in progress..
      */
     private static void verwerkAfval(Data data) {
         int baknr = 0;
@@ -64,18 +64,16 @@ public class SmartBin {
 //                afval = data.getAfvalViaKleur(kleur);
 //                afvaltype = afval.getAfvaltype();
             }
-            System.out.println(afvaltype);
-            baktype = data.getAfvalInWelkeBak(afvaltype);
-            baknr = data.getBak(baktype);
-            System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
-            
+            bakType = data.getAfvalInWelkeBak(afvalType);
+            baknr = data.getBak(bakType);
+            System.out.println("Afval met type " + afvalType + " in bak #" + baknr + " met type " + bakType); // tijdelijk, om te kijken of het werkt
+
 //            openBak(bakType); // vindt en opent de juiste bak op basis van baktype, zet lampjes om, etc.
 //            sluitBak(); // sluit de bak die open is gegaan, na toename van gewicht, zet lampjes om, etc.
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
-        
-        
+
     }
-    
+
 }
