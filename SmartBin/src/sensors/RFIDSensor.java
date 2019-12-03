@@ -5,8 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Subklasse van SerialConnector. Deze klasse werkt alleen correct als deze 
+ * Subklasse van SerialConnector. Deze klasse werkt alleen correct als deze
  * losgelaten wordt op de input van de RFIDSensor.
+ *
  * @author Liza Verhaert, adapted from Unknown
  */
 public class RFIDSensor extends SerialConnector {
@@ -18,13 +19,12 @@ public class RFIDSensor extends SerialConnector {
     // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
     private final String REGEX = "(\\s0x[\\d\\w][\\d\\w])+";
-    
+
     /**
-     * @Override serialEvent van de superklasse. Ik heb deze methode aangepast 
-     * zodat ik niet alleen de inputLine print, maar ook de gewenste data eruit 
-     * haal en opsla.
-     * De regels waar geen commentaar achter staat, zijn onveranderd ten opzichte
-     * van de serialEvent-methode in de superklasse
+     * @Override serialEvent van de superklasse. Ik heb deze methode aangepast
+     * zodat ik niet alleen de inputLine print, maar ook de gewenste data eruit
+     * haal en opsla. De regels waar geen commentaar achter staat, zijn
+     * onveranderd ten opzichte van de serialEvent-methode in de superklasse
      */
     @Override
     public synchronized void serialEvent(SerialPortEvent oEvent) {
@@ -38,13 +38,13 @@ public class RFIDSensor extends SerialConnector {
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr
                     System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
-                 }
+                }
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
         }
     }
-    
+
     public static void execute(int BAUD_RATE) throws Exception {
         RFIDSensor main = new RFIDSensor();
         if (main.initialize(BAUD_RATE)) {
@@ -67,5 +67,5 @@ public class RFIDSensor extends SerialConnector {
     public static String getChipnr() {
         return chipnr;
     }
-    
+
 }

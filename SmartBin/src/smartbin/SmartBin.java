@@ -3,6 +3,8 @@ package smartbin;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Afval;
+import sensors.GewichtSensor;
+import sensors.KleurSensor;
 import sensors.RFIDSensor;
 import sensors.SerialConnector;
 
@@ -27,16 +29,16 @@ public class SmartBin {
         /**
          * Liza
          */
-        RFIDSensor.execute(115200);
+        //RFIDSensor.execute(115200);
 
         /**
          * Duygu
          */
-//        KleurenSensor.execute();
+//        KleurSensor.execute(9600);
         /**
          * Ketura
          */
-//        GewichtSensor.execute();
+//        GewichtSensor.execute(9600);
     }
 
     /**
