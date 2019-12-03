@@ -1,9 +1,5 @@
 # SmartBin
 
-## 13/11
-<br> SmartBin: de connectie met de database
-<br> ArduinoTest: omgeving om de connectie tussen Arduino en Java te testen
-
 ## RFID-nummers
 <br> Liza Radboud 046C89A27A2280
 <br> Liza ID 08413C24
