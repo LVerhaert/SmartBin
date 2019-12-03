@@ -41,7 +41,7 @@ public class GewichtSensor extends SerialConnector {
                     System.out.println("Gewicht: " + gewicht); // en wil ik deze laten zien in de output
                 }
             } catch (Exception e) {
-               //System.err.println(e.toString());
+                //System.err.println(e.toString());
             }
         }
 
