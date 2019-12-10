@@ -17,12 +17,12 @@ public class SerialConnector implements SerialPortEventListener {
     SerialPort serialPort;
     // The port we're normally going to use.
     private static final String PORT_NAMES[] = {
-        "/dev/cu.usbmodem1421", // Mac OS X
-        "COM6", // Windows
+        "/dev/cu.usbmodem1411", // Mac OS X
+        "/dev/cu.usbmodem1421",// Mac OS X
         "COM5", // Windows
         "COM4", // Windows
         "COM3", // Windows
-    };
+        "COM6",};
     // A BufferedReader which will be fed by an InputStreamReader converting the
     // bytes into characters making the displayed results codepage independent
     protected BufferedReader input;
