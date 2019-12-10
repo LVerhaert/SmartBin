@@ -10,7 +10,7 @@
 // for common cathode, connect the common to ground
 
 // set to false if using a common cathode LED
-#define commonAnode false
+#define commonAnode true
 
 // our RGB -> eye-recognized gamma color
 byte gammatable[256];
@@ -74,9 +74,9 @@ void loop() {
   
   tcs.setInterrupt(true);  // turn off LED
 
-  Serial.print("R:\t"); Serial.print(int(red)); 
-  Serial.print("\tG:\t"); Serial.print(int(green)); 
-  Serial.print("\tB:\t"); Serial.print(int(blue));
+  Serial.print("R:"); Serial.print(int(red)); 
+  Serial.print(",G:"); Serial.print(int(green)); 
+  Serial.print(",B:"); Serial.print(int(blue));
 
 //  Serial.print("\t");
 //  Serial.print((int)red, HEX); Serial.print((int)green, HEX); Serial.print((int)blue, HEX);
