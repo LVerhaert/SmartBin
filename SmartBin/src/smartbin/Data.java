@@ -12,19 +12,20 @@ import model.Bak;
  * @author Liza Verhaert
  */
 public class Data {
+
     private ArrayList<Afval> afval;
     private ArrayList<AfvalInBak> afvalinbakken;
     private ArrayList<Bak> bakken;
-    
+
     private DBCommunicator dbcommunicator;
-    
+
     public Data() {
         dbcommunicator = new DBCommunicator();
-        
+
         resetAfval();
         resetAfvalinbakken();
         resetBakken();
-        
+
     }
 
     private void resetAfval() {
@@ -44,7 +45,7 @@ public class Data {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        
+
     }
 
     private void resetAfvalinbakken() {
@@ -79,7 +80,7 @@ public class Data {
             System.err.println(e.getMessage());
         }
     }
-    
+
     public void addAfval(Afval a) {
         afval.add(a);
     }

@@ -24,21 +24,20 @@ public class SmartBin {
 //        SerialConnector.execute();
 
 //        while (true) {
-//            verwerkAfval(data);
+//        verwerkAfval(data);
 //        }
         /**
          * Liza
          */
-        //RFIDSensor.execute(115200);
-
+ //       RFIDSensor.execute(115200);
         /**
          * Duygu
          */
-        KleurSensor.execute(9600);
+//        KleurSensor.execute(9600);
         /**
          * Ketura
          */
-//        GewichtSensor.execute(9600);
+        GewichtSensor.execute(9600);
     }
 
     /**
@@ -54,7 +53,7 @@ public class SmartBin {
                 RFIDSensor.execute(115200);
                 chipnr = RFIDSensor.getChipnr();
             } while (chipnr == "");
-            
+
             Afval afval = data.getAfvalViaChipnr(chipnr);
             if (afval.getKleur().equals("(0, 0, 0)")) { // als er geen kleur nodig is
                 afvaltype = afval.getAfvaltype();

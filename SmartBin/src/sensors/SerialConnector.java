@@ -22,8 +22,7 @@ public class SerialConnector implements SerialPortEventListener {
         "COM5", // Windows
         "COM4", // Windows
         "COM3", // Windows
-        "COM6",
-    };
+        "COM6",};
     // A BufferedReader which will be fed by an InputStreamReader converting the
     // bytes into characters making the displayed results codepage independent
     protected BufferedReader input;
