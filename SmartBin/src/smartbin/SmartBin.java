@@ -50,11 +50,12 @@ public class SmartBin {
         String baktype = "error";
         String chipnr = "";
         try {
+            RFIDSensor.execute(115200);
             do {
-                RFIDSensor.execute(115200);
+//                RFIDSensor.execute(115200);
                 chipnr = RFIDSensor.getChipnr();
             } while (chipnr == "");
-            
+            System.out.println("test");
             Afval afval = data.getAfvalViaChipnr(chipnr);
             if (afval.getKleur().equals("(0, 0, 0)")) { // als er geen kleur nodig is
                 afvaltype = afval.getAfvaltype();
