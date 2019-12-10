@@ -38,16 +38,16 @@ CREATE TABLE afval
 	  , FOREIGN KEY (afvaltype) REFERENCES afvalinbak (afvaltype)
 	);
 
-INSERT INTO afval VALUES (1, 'x04 x6C x89 xA2 x7A x22 x80','glas wit', 23, 38, 3); --Liza Radboud
-INSERT INTO afval VALUES (2, 'x08 x41 x3C x24','glas kleur', 4, 53, 178); --Liza ID
-INSERT INTO afval VALUES (3, 'x08 x42 x6E x79','plastic', null, null, null); --Liza Rijbewijs
-INSERT INTO afval VALUES (4, 'x05 x0B x8D xE0 xE0 x00 x00','gft', null, null, null); --Liza Afvalpas
-INSERT INTO afval VALUES (5, 'xC7 x75 x55 xA3','papier', null, null, null); --Liza OV geel
-INSERT INTO afval VALUES (6, 'x11 xC3 x9F x03','blik', null, null, null); --Ketura OV geel*
-INSERT INTO afval VALUES (7, 'xD1 x78 x76 x03','papier', null, null, null); --Ketura OV geel
-INSERT INTO afval VALUES (8, '1234','gft', null, null, null); --Ketura OV blauw
-INSERT INTO afval VALUES (9, 'x08 xF6 x08 x2F','plastic', null, null, null); --Ketura ID
-INSERT INTO afval VALUES (10, 'x41 x4E xDB x07','glas kleur', 165, 243, 187); --Duygu OV geel
+INSERT INTO afval VALUES (1, '0x04 0x6C 0x89 0xA2 0x7A 0x22 0x80','glas wit', 23, 38, 3); --Liza Radboud
+INSERT INTO afval VALUES (2, '0x08 0x41 0x3C 0x24','glas kleur', 4, 53, 178); --Liza ID
+INSERT INTO afval VALUES (3, '0x08 0x42 0x6E 0x79','plastic', null, null, null); --Liza Rijbewijs
+INSERT INTO afval VALUES (4, '0x05 0x0B 0x8D 0xE0 0xE0 0x00 0x00','gft', null, null, null); --Liza Afvalpas
+INSERT INTO afval VALUES (5, '0xC7 0x75 0x55 0xA3','papier', null, null, null); --Liza OV geel
+INSERT INTO afval VALUES (6, '0x11 0xC3 0x9F 0x03','blik', null, null, null); --Ketura OV geel*
+INSERT INTO afval VALUES (7, '0xD1 0x78 0x76 0x03','papier', null, null, null); --Ketura OV geel
+INSERT INTO afval VALUES (8, '0x47 0x89 0x9E 0x27','gft', null, null, null); --Ketura OV blauw
+INSERT INTO afval VALUES (9, '0x08 0xF6 0x08 0x2F','plastic', null, null, null); --Ketura ID
+INSERT INTO afval VALUES (10, '0x41 0x4E 0xDB 0x07','glas kleur', 165, 243, 187); --Duygu OV geel
 
 
 CREATE TABLE bak
