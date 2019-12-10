@@ -23,9 +23,9 @@ public class SmartBin {
         Data data = new Data();
 //        SerialConnector.execute();
 
-//        while (true) {
-//            verwerkAfval(data);
-//        }
+        while (true) {
+            verwerkAfval(data);
+        }
         /**
          * Liza
          */
@@ -34,7 +34,7 @@ public class SmartBin {
         /**
          * Duygu
          */
-        KleurSensor.execute(9600);
+//        KleurSensor.execute(9600);
         /**
          * Ketura
          */
