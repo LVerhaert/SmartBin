@@ -33,11 +33,11 @@ public class SmartBin {
         /**
          * Duygu
          */
-//        KleurSensor.execute(9600);
+ //       KleurSensor.execute(9600);
         /**
          * Ketura
          */
-        GewichtSensor.execute(9600);
+ //       GewichtSensor.execute(9600);
     }
 
     /**
