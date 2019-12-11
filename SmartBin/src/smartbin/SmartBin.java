@@ -29,8 +29,7 @@ public class SmartBin {
         /**
          * Liza
          */
-        //RFIDSensor.execute(115200);
-
+ //       RFIDSensor.execute(115200);
         /**
          * Duygu
          */
@@ -38,7 +37,7 @@ public class SmartBin {
         /**
          * Ketura
          */
-//        GewichtSensor.execute(9600);
+        GewichtSensor.execute(9600);
     }
 
     /**

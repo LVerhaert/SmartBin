@@ -14,6 +14,7 @@ public class GewichtSensor extends SerialConnector {
 
     // de gewichtwaarde die ik uit de inputLine haal
     private static String gewicht = "";
+    private static Double getal;
     // reguliere expressie die nodig is om de waarde van het gewicht uit de inputLine te halen:
     // "0.0 g " is wat ik zoek, dus "-?(\\d)+.\\d g" één of meerdere keren
     // achter elkaar
@@ -22,9 +23,9 @@ public class GewichtSensor extends SerialConnector {
 
     /**
      * @Override serialEvent van de superklasse. Ik heb deze methode aangepast
-     * omdat ik alleen de gewenste data uit de input haal en opsla. De regels
-     * waar geen commentaar achter staat, zijn onveranderd ten opzichte van de
-     * serialEvent-methode in de superklasse
+     * zodat ik niet alleen de inputLine print, maar ook de gewenste data eruit
+     * haal en opsla. De regels waar geen commentaar achter staat, zijn
+     * onveranderd ten opzichte van de serialEvent-methode in de superklasse
      */
     @Override
     public synchronized void serialEvent(SerialPortEvent oEvent) {
@@ -34,14 +35,16 @@ public class GewichtSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = input.readLine();
-                //System.out.println(inputLine);
+                System.out.println("Input: " + inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     gewicht = matcher.group(); // wil ik deze opslaan in de variabele 
-                    System.out.println("Gewicht: " + gewicht); // en wil ik deze laten zien in de output
+                    gewicht = gewicht.substring(0, gewicht.length() - 2); // de twee laatste waarden van de string weghalen
+                    getal = Double.parseDouble(gewicht); // de string omzetten in een double
+                    System.out.println("Gewicht: " + getal); // deze laten zien in de output
                 }
             } catch (Exception e) {
-               //System.err.println(e.toString());
+                //System.err.println(e.toString());
             }
         }
 

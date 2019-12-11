@@ -33,7 +33,7 @@ public class RFIDSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = input.readLine();
-                System.out.println(inputLine);
+               System.out.println(inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr

@@ -8,12 +8,13 @@ import javafx.scene.control.Alert.AlertType;
 
 /**
  * Deze klasse communiceert met de database
+ *
  * @author aangepast door Liza Verhaert
  */
 public class DBCommunicator {
 
     private Connection conn;
-    
+
     /**
      * Constructor.
      */
@@ -22,6 +23,7 @@ public class DBCommunicator {
 
     /**
      * Leg de verbinding
+     *
      * @return gelegde verbinding
      */
     private Connection createConnection() {
@@ -43,6 +45,7 @@ public class DBCommunicator {
 
     /**
      * Methode om een opdracht te versturen en de resultaten terug te krijgen
+     *
      * @param strSQL de SQL-opdracht die uitgevoerd moet worden
      * @return de resultaten van de opdracht
      */
@@ -59,7 +62,9 @@ public class DBCommunicator {
     }
 
     /**
-     * Methode om een opdracht te versturen en terug te krijgen of het gelukt is of niet
+     * Methode om een opdracht te versturen en terug te krijgen of het gelukt is
+     * of niet
+     *
      * @param strDML de DML-opdracht die uitgevoerd moet worden
      * @return 0 als het niet gelukt is, 1 als het wel gelukt is
      */
