@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 
 /**
- * @author Unknown
+ * @author mechjesus
  */
 public class SerialConnector implements SerialPortEventListener {
 
@@ -107,6 +107,7 @@ public class SerialConnector implements SerialPortEventListener {
         SerialConnector main = new SerialConnector();
         if (main.initialize(BAUD_RATE)) {
             Thread t = new Thread() {
+                @Override
                 public void run() {
                     // the following line will keep this app alive for 1000 seconds,
                     // waiting for events to occur and responding to them (printing
