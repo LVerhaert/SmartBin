@@ -5,8 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Subklasse van SerialConnector. Deze klasse werkt correct als het losgelaten
- * wordt op de input van de Gewichtsensor.
+ * Subklasse van SerialConnector. Deze klasse werkt correct in combinatie met de
+ * input van de Gewichtsensor.
  *
  * @author Ketura Seedorf, adapted from Liza Verhaert
  */
@@ -16,8 +16,6 @@ public class GewichtSensor extends SerialConnector {
     private static String gewicht = "";
     private static Double getal;
     // reguliere expressie die nodig is om de waarde van het gewicht uit de inputLine te halen:
-    // "0.0 g " is wat ik zoek, dus "-?(\\d)+.\\d g" één of meerdere keren
-    // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
     private final String REGEX = "-?(\\d)+.\\d g";
 
@@ -41,7 +39,7 @@ public class GewichtSensor extends SerialConnector {
                     gewicht = matcher.group(); // wil ik deze opslaan in de variabele 
                     gewicht = gewicht.substring(0, gewicht.length() - 2); // de twee laatste waarden van de string weghalen
                     getal = Double.parseDouble(gewicht); // de string omzetten in een double
-                    System.out.println("Gewicht: " + getal); // deze laten zien in de output
+                    System.out.println("Gewicht: " + getal); // en deze laten zien in de output
                 }
             } catch (Exception e) {
                 //System.err.println(e.toString());
