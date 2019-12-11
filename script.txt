@@ -62,7 +62,7 @@ INSERT INTO bak VALUES
 	( 1
 	  , 1
 	  ,'dicht'
-	  ,'groen'
+	  ,'rood'
 	  ,'plastic'
 	);
 
@@ -70,7 +70,7 @@ INSERT INTO bak VALUES
 	( 2
 	  , 2
 	  ,'dicht'
-	  ,'groen'
+	  ,'rood'
 	  ,'glas wit'
 	);
 
@@ -78,7 +78,7 @@ INSERT INTO bak VALUES
 	( 3
 	  , 3
 	  ,'dicht'
-	  ,'groen'
+	  ,'rood'
 	  ,'glas kleur'
 	);
 
@@ -86,6 +86,6 @@ INSERT INTO bak VALUES
 	( 4
 	  , 4
 	  ,'dicht'
-	  ,'groen'
+	  ,'rood'
 	  ,'overig'
 	);
