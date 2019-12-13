@@ -67,6 +67,9 @@ public class RFIDSensor extends SerialConnector {
         }
     }
 
+
+
+
     public static String getChipnr() {
         return chipnr;
     }

@@ -21,11 +21,13 @@ public class SmartBin {
     public static void main(String[] args) throws Exception {
         // Haal data uit de database en gebruik deze om de modelklassen te vullen
         Data data = new Data();
-//        SerialConnector.execute();
+        
+        SerialConnector.executeOutput(9600);
+//        SerialConnector.execute(9600);
         verwerkAfval(data);
-        while (true) {
+//        while (true) {
             // verwerkAfval(data);
-        }
+//        }
         /**
          * Liza
          */
@@ -37,7 +39,7 @@ public class SmartBin {
         /**
          * Ketura
          */
-        GewichtSensor.execute(9600);
+//        GewichtSensor.execute(9600);
     }
 
     /**
