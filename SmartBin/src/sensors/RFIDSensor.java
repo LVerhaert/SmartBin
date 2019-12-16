@@ -39,7 +39,9 @@ public class RFIDSensor extends SerialConnector {
                     chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr
                     chipnr = chipnr.substring(1);
                     System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
+                    this.close();
                 }
+                
             } catch (Exception e) {
                 System.err.println(e.toString());
             }

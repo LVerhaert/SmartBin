@@ -5,6 +5,8 @@ package model;
  * @author Liza Verhaert
  */
 public class Bak {
+
+    public static String getDekselpos;
     
     private int baknr;
     private int gewichtsensor;

@@ -33,13 +33,14 @@ public class GewichtSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = input.readLine();
-                System.out.println("Input: " + inputLine);
+                // System.out.println("Input: " + inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     gewicht = matcher.group(); // wil ik deze opslaan in de variabele 
                     gewicht = gewicht.substring(0, gewicht.length() - 2); // de twee laatste waarden van de string weghalen
-                    getal = Double.parseDouble(gewicht); // de string omzetten in een double
-                    System.out.println("Gewicht: " + getal); // en deze laten zien in de output
+                    getal = Double.parseDouble(gewicht); // de string omzetten in een double'
+//                    
+
                 }
             } catch (Exception e) {
                 //System.err.println(e.toString());
@@ -69,8 +70,8 @@ public class GewichtSensor extends SerialConnector {
         }
     }
 
-    public static String getGewicht() {
-        return gewicht;
+    public static Double getGetal() {
+        return getal;
     }
 
 }
