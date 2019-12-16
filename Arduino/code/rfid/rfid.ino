@@ -43,30 +43,11 @@ products from Adafruit!
 #define PN532_MOSI (3)
 #define PN532_SS   (4)
 #define PN532_MISO (5)
+// GND -> GND, VCC -> 5V
 
-// If using the breakout or shield with I2C, define just the pins connected
-// to the IRQ and reset lines.  Use the values below (2, 3) for the shield!
-#define PN532_IRQ   (2)
-#define PN532_RESET (3)  // Not connected by default on the NFC Shield
-
-// Uncomment just _one_ line below depending on how your breakout or shield
-// is connected to the Arduino:
-
-// Use this line for a breakout with a software SPI connection (recommended):
 Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 
-// Use this line for a breakout with a hardware SPI connection.  Note that
-// the PN532 SCK, MOSI, and MISO pins need to be connected to the Arduino's
-// hardware SPI SCK, MOSI, and MISO pins.  On an Arduino Uno these are
-// SCK = 13, MOSI = 11, MISO = 12.  The SS line can be any digital IO pin.
-//Adafruit_PN532 nfc(PN532_SS);
-
-// Or use this line for a breakout or shield with an I2C connection:
-//Adafruit_PN532 nfc(PN532_IRQ, PN532_RESET);
-
 #if defined(ARDUINO_ARCH_SAMD)
-// for Zero, output on USB Serial console, remove line below if using programming port to program the Zero!
-// also change #define in Adafruit_PN532.cpp library file
    #define Serial SerialUSB
 #endif
 
@@ -74,7 +55,7 @@ void setup(void) {
   #ifndef ESP8266
     while (!Serial); // for Leonardo/Micro/Zero
   #endif
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.print("Hello!\n");
 
   nfc.begin();
@@ -94,7 +75,7 @@ void setup(void) {
   // configure board to read RFID tags
   nfc.SAMConfig();
   
-  Serial.print("Waiting for an ISO14443A Card ...\n");
+  Serial.print("Present card ...\n");
 }
 
 
@@ -110,7 +91,7 @@ void loop(void) {
   
   if (success) {
     // Display some basic information about the card
-    Serial.print("Found an ISO14443A card\n");
+//    Serial.print("Found an ISO14443A card\n");
 //    Serial.print("  UID Length: ");Serial.print(uidLength, DEC);Serial.print(" bytes\n");
     Serial.print("  UID Value: ");
     nfc.PrintHex(uid, uidLength);

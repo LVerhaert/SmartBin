@@ -21,32 +21,29 @@ CREATE TABLE afvalinbak
 
 INSERT INTO afvalinbak VALUES ('gft','overig');
 INSERT INTO afvalinbak VALUES ('papier','overig');
-INSERT INTO afvalinbak VALUES ('glas wit','glas wit');
-INSERT INTO afvalinbak VALUES ('glas kleur','glas kleur');
+INSERT INTO afvalinbak VALUES ('glas kleur','glas wit');
+INSERT INTO afvalinbak VALUES ('glas wit','glas kleur');
 INSERT INTO afvalinbak VALUES ('blik','overig');
 INSERT INTO afvalinbak VALUES ('plastic','plastic');
 
 
 CREATE TABLE afval
 	(   afvalnr     INT PRIMARY KEY
-	  , chipnr      TEXT NOT NULL UNIQUE
+	  , chipnr      TEXT NOT NULL
 	  , afvaltype   TEXT NOT NULL
 	  , kleurR	INT
 	  , kleurG	INT
 	  , kleurB	INT
+          , notes       TEXT
 	  , FOREIGN KEY (afvaltype) REFERENCES afvalinbak (afvaltype)
 	);
 
-INSERT INTO afval VALUES (1, '0x04 0x6C 0x89 0xA2 0x7A 0x22 0x80','glas wit', 23, 38, 3); --Liza Radboud
-INSERT INTO afval VALUES (2, '0x08 0x41 0x3C 0x24','glas kleur', 4, 53, 178); --Liza ID
-INSERT INTO afval VALUES (3, '0x08 0x42 0x6E 0x79','plastic', null, null, null); --Liza Rijbewijs
-INSERT INTO afval VALUES (4, '0x05 0x0B 0x8D 0xE0 0xE0 0x00 0x00','gft', null, null, null); --Liza Afvalpas
-INSERT INTO afval VALUES (5, '0xC7 0x75 0x55 0xA3','papier', null, null, null); --Liza OV geel
-INSERT INTO afval VALUES (6, '0x11 0xC3 0x9F 0x03','blik', null, null, null); --Ketura OV geel*
-INSERT INTO afval VALUES (7, '0xD1 0x78 0x76 0x03','papier', null, null, null); --Ketura OV geel
-INSERT INTO afval VALUES (8, '0x47 0x89 0x9E 0x27','gft', null, null, null); --Ketura OV blauw
-INSERT INTO afval VALUES (9, '0x08 0xF6 0x08 0x2F','plastic', null, null, null); --Ketura ID
-INSERT INTO afval VALUES (10, '0x41 0x4E 0xDB 0x07','glas kleur', 165, 243, 187); --Duygu OV geel
+INSERT INTO afval VALUES (1, '0x05 0x0B 0x8D 0xE0 0xE0 0x00 0x00','gft', null, null, null, 'Liza Afvalpas');
+INSERT INTO afval VALUES (2, '0xC7 0x75 0x55 0xA3','papier', null, null, null, 'Liza OV geel');
+INSERT INTO afval VALUES (3, '0x11 0xC3 0x9F 0x03','blik', null, null, null, 'Ketura OV geel ster');
+INSERT INTO afval VALUES (4, '0xD1 0x78 0x76 0x03','plastic', null, null, null, 'Ketura OV geel');
+INSERT INTO afval VALUES (5, '0x47 0x89 0x9E 0x27','glas kleur', 145, 34, 255, 'Ketura OV blauw');
+INSERT INTO afval VALUES (6, '0x47 0x89 0x9E 0x27','glas wit', 1, 1, 1, 'Ketura OV blauw');
 
 
 CREATE TABLE bak

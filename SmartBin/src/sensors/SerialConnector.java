@@ -11,32 +11,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author mechjesus
  */
 public class SerialConnector implements SerialPortEventListener {
 
-    private static SerialPort serialPort;
     // The port we're normally going to use.
+    private static SerialPort serialPort;
+    // Possible port names
     private static final String PORT_NAMES[] = {
         "/dev/cu.usbmodem1411", // Mac OS X
-        "/dev/cu.usbmodem1421",// Mac OS X
+        "/dev/cu.usbmodem1421", // Mac OS X
         "COM5", // Windows
         "COM4", // Windows
         "COM3", // Windows
-        "COM6",};
+        "COM6", // Windows
+    };
+
+    // Standard baud rate
+    protected static final int BAUD_RATE = 9600;
     // A BufferedReader which will be fed by an InputStreamReader converting the
     // bytes into characters making the displayed results codepage independent
-    protected BufferedReader input;
+    protected BufferedReader inputStream;
     // The output stream to the port
-    private OutputStream output;
+    private static OutputStream outputStream;
     // Milliseconds to block while waiting for port open
-    private static final int TIME_OUT = 2000;
-    // Default bits per second for COM port
+    protected static final int TIME_OUT = 2000;
 
+//    private static String messageString = "color FF00FFEND";
     public boolean initialize(int DATA_RATE) {
 
         CommPortIdentifier portId = null;
@@ -67,14 +70,21 @@ public class SerialConnector implements SerialPortEventListener {
                     SerialPort.DATABITS_8,
                     SerialPort.STOPBITS_1,
                     SerialPort.PARITY_NONE);
+            Thread.sleep(TIME_OUT);
 
             // Open the streams
-            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            output = serialPort.getOutputStream();
+            inputStream = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+            outputStream = serialPort.getOutputStream();
 
             // Add event listeners
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
+        } catch (PortInUseException e) {
+            System.err.println(e.toString());
+        } catch (IOException e) {
+            System.err.println(e.toString());
+        } catch (UnsupportedCommOperationException e) {
+            System.err.println(e.toString());
         } catch (Exception e) {
             System.err.println(e.toString());
         }
@@ -99,7 +109,7 @@ public class SerialConnector implements SerialPortEventListener {
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
-                String inputLine = input.readLine();
+                String inputLine = inputStream.readLine();
                 System.out.println(inputLine);
             } catch (Exception e) {
                 System.err.println(e.toString());
@@ -107,71 +117,45 @@ public class SerialConnector implements SerialPortEventListener {
         }
     }
 
-    public static void execute(int BAUD_RATE) throws Exception {
+    public static void receiveInput() throws Exception {
         SerialConnector main = new SerialConnector();
         if (main.initialize(BAUD_RATE)) {
             Thread t = new Thread() {
                 @Override
                 public void run() {
-                    // the following line will keep this app alive for 1000 seconds,
+                    // the following line will keep this app alive for 60 seconds,
                     // waiting for events to occur and responding to them (printing
                     // incoming messages to console).
                     try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException ie) {
+                        Thread.sleep(60000);
+                    } catch (InterruptedException e) {
+                        System.err.println(e.getMessage());
                     }
                 }
             };
             t.start();
-            System.out.println("Started");
+            System.out.println("Arduino -> Java started");
         }
     }
 
-    private static Enumeration portList;
-    private static CommPortIdentifier portId;
-    private static String messageString = "color FF00FFEND";
-    private static OutputStream outputStream;
+    public static void sendOutput(String outputMessage) {
+        SerialConnector main = new SerialConnector();
+        if (main.initialize(BAUD_RATE)) {
+            System.out.println("Java -> Arduino started");
 
-    public static void executeOutput(int BAUD_RATE) {
-        portList = CommPortIdentifier.getPortIdentifiers();
-
-        while (portList.hasMoreElements()) {
-
-            portId = (CommPortIdentifier) portList.nextElement();
-            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-
-                if (portId.getName().equals("COM3")) {
-
-                    try {
-                        serialPort = (SerialPort) portId.open("SimpleWriteApp", 2000);
-
-                        serialPort.setSerialPortParams(9600,
-                                SerialPort.DATABITS_8,
-                                SerialPort.STOPBITS_1,
-                                SerialPort.PARITY_NONE);
-                        Thread.sleep(4000);
-
-                        outputStream = serialPort.getOutputStream();
-                        Thread.sleep(4000);
-                        
-
-
-                        outputStream.write(messageString.getBytes());
-                        System.out.println(messageString);
-
-                        outputStream.close();
-                        serialPort.close();
-                    } catch (IOException e) {
-                        System.out.println("err3");
-                    } catch (PortInUseException e) {
-                        System.out.println("err");
-                    } catch (UnsupportedCommOperationException e) {
-                        System.out.println("err2");
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+            try {
+                outputStream.write(outputMessage.getBytes());
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
             }
+            System.out.println(outputMessage);
+
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+            serialPort.close();
         }
     }
 }

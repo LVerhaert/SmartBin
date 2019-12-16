@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 /**
  * Subklasse van SerialConnector. Deze klasse werkt correct als het losgelaten
- * wordt op de input van de Kleursensor.
+ wordt op de inputStream van de Kleursensor.
  *
  * @author Ketura Seedorf, adapted from Liza Verhaert
  */
@@ -41,8 +41,8 @@ public class KleurSensor extends SerialConnector {
 
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
-                String inputLine = input.readLine();
-                //System.out.println("input: " + inputLine);
+                String inputLine = inputStream.readLine();
+                //System.out.println("inputStream: " + inputLine);
                 Pattern patternR = Pattern.compile(REGEXR);
                 Pattern patternG = Pattern.compile(REGEXG);
                 Pattern patternB = Pattern.compile(REGEXB);
@@ -80,24 +80,24 @@ public class KleurSensor extends SerialConnector {
 
     }
 
-    public static void execute(int BAUD_RATE) throws Exception {
+    public static void receiveInput() throws Exception {
         KleurSensor main = new KleurSensor();
         if (main.initialize(BAUD_RATE)) {
             Thread t = new Thread() {
                 @Override
                 public void run() {
-                    // the following line will keep this app alive for 1000 seconds,
+                    // the following line will keep this app alive for 60 seconds,
                     // waiting for events to occur and responding to them (printing
                     // incoming messages to console).
                     try {
-                        Thread.sleep(1000000);
-                    } catch (InterruptedException ie) {
-                        System.err.println(ie.toString());
+                        Thread.sleep(60000);
+                    } catch (InterruptedException e) {
+                        System.err.println(e.getMessage());
                     }
                 }
             };
             t.start();
-            System.out.println("Started");
+            System.out.println("Kleursensor Arduino -> Java started");
         }
     }
 
