@@ -37,10 +37,13 @@ public class Data {
                 int afvalnr = dbResult.getInt("afvalnr");
                 String chipnr = dbResult.getString("chipnr");
                 String afvaltype = dbResult.getString("afvaltype");
+                if (afvaltype.startsWith("glas")) {
+                    afvaltype = "glas";
+                }
                 int kleurr = dbResult.getInt("kleurr");
                 int kleurg = dbResult.getInt("kleurg");
                 int kleurb = dbResult.getInt("kleurb");
-                afval.add(new Afval(/*afvalnr, */chipnr, afvaltype, kleurr, kleurg, kleurb));
+                afval.add(new Afval(chipnr, afvaltype, kleurr, kleurg, kleurb));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
