@@ -20,14 +20,16 @@ public class SmartBin {
         // Haal data uit de database en gebruik deze om de modelklassen te vullen
         Data data = new Data();
         
-//        SerialConnector.sendOutput("color FF00FFEND");
+//        SerialConnector.receiveInput();
 //        while (true) {
-             verwerkAfval(data);
+//             verwerkAfval(data);
 //        }
+        SerialConnector.sendOutput("gewicht1END");
+//        GewichtSensor.receiveInput();
         /**
          * Liza
          */
- //       RFIDSensor.receiveInput();
+//        RFIDSensor.receiveInput();
         /**
          * Duygu
          */

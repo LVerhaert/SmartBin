@@ -20,12 +20,12 @@ public class Data {
     private DBCommunicator dbcommunicator;
 
     public Data() {
+        System.out.println("Connecting to database...");
         dbcommunicator = new DBCommunicator();
-
         resetAfval();
         resetAfvalinbakken();
         resetBakken();
-
+        System.out.println(afval.size() + " afvalitems, " + bakken.size() + " bakken gevonden.");
     }
 
     private void resetAfval() {
