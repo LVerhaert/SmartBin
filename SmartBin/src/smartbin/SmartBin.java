@@ -20,10 +20,10 @@ public class SmartBin {
     public static void main(String[] args) throws Exception {
         // Haal data uit de database en gebruik deze om de modelklassen te vullen
 //        Data data = new Data();
-        
+
         // De uiteindelijke functie die het hele programma gaat uitvoeren!
 //        while (true) {
- //       verwerkAfval(data);
+        //       verwerkAfval(data);
 //        }
 
         /* Stuur een commando naar de arduino
@@ -32,7 +32,7 @@ public class SmartBin {
             gewicht2END     zet gewichtsensor 2 aan en geeft gewichtwaarden terug
             gewicht3END     zet gewichtsensor 3 aan en geeft gewichtwaarden terug
             gewicht4END     zet gewichtsensor 4 aan en geeft gewichtwaarden terug
-        */
+         */
 //        SerialConnector.sendOutput("gewicht1END");
         GewichtSensor.sendOutput("gewicht1END");
 
@@ -52,16 +52,17 @@ public class SmartBin {
         String afvaltype = "error";
         String baktype = "error";
         String chipnr = "";
+        Double gewicht = 0.0;
 
         try {
-            
+
             // Vind uit wat het chipnummer (de materiaalsoort dus) is
-            RFIDSensor.receiveInput();
-            do {
-                Thread.sleep(1000);
-                chipnr = RFIDSensor.getChipnr();
-            } while (chipnr.isEmpty());
-            Afval afval = data.getAfvalViaChipnr(chipnr);
+//            RFIDSensor.receiveInput();
+//            do {
+//                Thread.sleep(1000);
+//                chipnr = RFIDSensor.getChipnr();
+//            } while (chipnr.isEmpty());
+//            Afval afval = data.getAfvalViaChipnr(chipnr);
 
             // Als het materiaal "glas" is, moet worden gekeken of het wit of
             // gekleurd glas is
@@ -74,20 +75,17 @@ public class SmartBin {
 //                    afval.setAfvaltype("glas kleur");
 //                }
 //            }
-            
-            baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
-            baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
-            System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
+//            baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
+//            baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
+//            System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
 
-           //            openBak(bakType); // vindt en opent de juiste bak op basis van baktype, zet lampjes om, etc.
-//           GewichtSensor.receiveInput();
-//            Thread.sleep(1000);
-//            if (gewicht > 15.0) {
-//                System.out.println("Gewicht toegenomen.");
-////            sluitBak(); // sluit de bak die open is gegaan, na toename van gewicht, zet lampjes om, etc.
-//            }
- 
-
+            //            openBak(bakType); // vindt en opent de juiste bak op basis van baktype, zet lampjes om, etc.
+           GewichtSensor.receiveInput();
+            Thread.sleep(1000);
+            if (gewicht > 15.0) {
+                System.out.println("Gewicht toegenomen.");
+//            sluitBak(); // sluit de bak die open is gegaan, na toename van gewicht, zet lampjes om, etc.
+            }
             SerialConnector.sendOutput("open" + baknr + "END"); // open de juiste bak
             SerialConnector.sendOutput("gewicht" + baknr + "END"); // zet de juiste gewichtsensor aan
             SerialConnector.sendOutput("sluit" + baknr + "END"); // sluit de juiste bak

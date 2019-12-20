@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 public class GewichtSensor extends SerialConnector {
 
     // de gewichtwaarde die ik uit de inputLine haal
-    private static String stringGewicht = "";
-    private static Double gewicht;
+    private static String gewichtString = "";
+    private static Double gewicht = 0.0;
     // reguliere expressie die nodig is om de waarde van het gewicht uit de inputLine te halen:
     // "0.0 g " is wat ik zoek, dus "-?(\\d)+.\\d g" één of meerdere keren
     // achter elkaar
@@ -38,13 +38,14 @@ public class GewichtSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = inputStream.readLine();
-                System.out.println("Input: " + inputLine);
+                Thread.sleep(500);
+                System.out.println(inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
-                    stringGewicht = matcher.group(); // wil ik deze opslaan in de variabele 
-                    stringGewicht = stringGewicht.substring(0, stringGewicht.length() - 2); // de twee laatste waarden van de string weghalen
-                    gewicht = Double.parseDouble(stringGewicht); // de string omzetten in een double
-                    System.out.println("Gewicht: " + gewicht); // deze laten zien in de output
+                    gewichtString = matcher.group(); // wil ik deze opslaan in de variabele 
+                    gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // de twee laatste waarden van de string weghalen
+                    gewicht = Double.parseDouble(gewichtString); // de string omzetten in een double
+                    System.out.println("Gewicht: " + gewicht + " g"); // deze laten zien in de output
 
                     if (gewicht > 15.0) {
                         close();
