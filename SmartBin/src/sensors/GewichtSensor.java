@@ -1,6 +1,9 @@
 package sensors;
 
 import gnu.io.SerialPortEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +38,6 @@ public class GewichtSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = inputStream.readLine();
-                Thread.sleep(500); // toegevoegd om de exception te voorkomen!
                 System.out.println("Input: " + inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
@@ -82,4 +84,28 @@ public class GewichtSensor extends SerialConnector {
         return gewicht;
     }
 
+    public static void sendOutput(String outputMessage) {
+        GewichtSensor main = new GewichtSensor();
+        if (main.initialize(BAUD_RATE)) {
+            System.out.println("Java -> Gewichtsensor Arduino started");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GewichtSensor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                outputStream.write(outputMessage.getBytes());
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+            System.out.println(outputMessage);
+
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
 }
