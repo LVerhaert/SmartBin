@@ -17,8 +17,6 @@ public class GewichtSensor extends SerialConnector {
     private static String gewichtString = "";
     private static Double gewicht = 0.0;
     // reguliere expressie die nodig is om de waarde van het gewicht uit de inputLine te halen:
-    // "0.0 g " is wat ik zoek, dus "-?(\\d)+.\\d g" één of meerdere keren
-    // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
     private final String REGEX = "-?(\\d)+.\\d g";
 

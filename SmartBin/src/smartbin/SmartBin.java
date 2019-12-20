@@ -1,6 +1,7 @@
 package smartbin;
 
 import model.Afval;
+import model.Bak;
 import sensors.GewichtSensor;
 import sensors.KleurSensor;
 import sensors.RFIDSensor;
