@@ -19,17 +19,16 @@ public class SmartBin {
     public static void main(String[] args) throws Exception {
         // Haal data uit de database en gebruik deze om de modelklassen te vullen
         Data data = new Data();
-        
-//        SerialConnector.receiveInput();
-//        while (true) {
-//             verwerkAfval(data);
-//        }
+
         SerialConnector.sendOutput("gewicht1END");
-//        GewichtSensor.receiveInput();
+        GewichtSensor.receiveInput();
+//        while (true) {
+ //       verwerkAfval(data);
+//        }
         /**
          * Liza
          */
-//        RFIDSensor.receiveInput();
+        //       RFIDSensor.receiveInput();
         /**
          * Duygu
          */
@@ -37,7 +36,7 @@ public class SmartBin {
         /**
          * Ketura
          */
-//        GewichtSensor.receiveInput();
+      //         GewichtSensor.receiveInput();
     }
 
     /**
@@ -48,29 +47,35 @@ public class SmartBin {
         String afvaltype = "error";
         String baktype = "error";
         String chipnr = "";
+
         try {
-            RFIDSensor.receiveInput();
-            do {
-                Thread.sleep(1000); // geen idee waarom dit werkt, maar zet dit
-                // vrolijk overal tussen als je ergens anders een probleem hebt
-                chipnr = RFIDSensor.getChipnr();
-            } while (chipnr.isEmpty());
-
-            Afval afval = data.getAfvalViaChipnr(chipnr);
-//            if (afval.getKleur().equals("(0, 0, 0)")) { // als er geen kleur nodig is
-                afvaltype = afval.getAfvaltype();
-//            } else { // als er wel een kleur nodig is
-//                KleurenSensor.receiveInput();
-//                String kleur = KleurenSensor.getKleur();
-//                afval = data.getAfvalViaKleur(kleur);
-//                afvaltype = afval.getAfvaltype();
-//            }
-            baktype = data.getAfvalInWelkeBak(afvaltype);
-            baknr = data.getBak(baktype);
-            System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
-
+//            RFIDSensor.receiveInput();
+//            do {
+//                Thread.sleep(1000); // geen idee waarom dit werkt, maar zet dit
+//                // vrolijk overal tussen als je ergens anders een probleem hebt
+//                chipnr = RFIDSensor.getChipnr();
+//            } while (chipnr.isEmpty());
+//
+//            Afval afval = data.getAfvalViaChipnr(chipnr);
+////            if (afval.getKleur().equals("(0, 0, 0)")) { // als er geen kleur nodig is
+//            afvaltype = afval.getAfvaltype();
+////            } else { // als er wel een kleur nodig is
+////                KleurenSensor.receiveInput();
+////                String kleur = KleurenSensor.getKleur();
+////                afval = data.getAfvalViaKleur(kleur);
+////                afvaltype = afval.getAfvaltype();
+////            }
+//            baktype = data.getAfvalInWelkeBak(afvaltype);
+//            baknr = data.getBak(baktype);
+//            System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
 //            openBak(bakType); // vindt en opent de juiste bak op basis van baktype, zet lampjes om, etc.
+            GewichtSensor.receiveInput();
+            Thread.sleep(1000);
+            if (GewichtSensor.getGewicht() > 15.0) {
+                System.out.println("Gewicht is toegenomen.");
 //            sluitBak(); // sluit de bak die open is gegaan, na toename van gewicht, zet lampjes om, etc.
+            }
+
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
