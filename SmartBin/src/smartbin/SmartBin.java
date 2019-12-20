@@ -76,6 +76,15 @@ public class SmartBin {
             baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
             System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
 
+           //            openBak(bakType); // vindt en opent de juiste bak op basis van baktype, zet lampjes om, etc.
+//           GewichtSensor.receiveInput();
+//            Thread.sleep(1000);
+//            if (gewicht > 15.0) {
+//                System.out.println("Gewicht toegenomen.");
+////            sluitBak(); // sluit de bak die open is gegaan, na toename van gewicht, zet lampjes om, etc.
+//            }
+ 
+
             SerialConnector.sendOutput("open" + baknr + "END"); // open de juiste bak
             SerialConnector.sendOutput("gewicht" + baknr + "END"); // zet de juiste gewichtsensor aan
             SerialConnector.sendOutput("sluit" + baknr + "END"); // sluit de juiste bak
