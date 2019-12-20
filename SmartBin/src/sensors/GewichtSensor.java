@@ -35,6 +35,7 @@ public class GewichtSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = inputStream.readLine();
+                Thread.sleep(500); // toegevoegd om de exception te voorkomen!
                 System.out.println("Input: " + inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
@@ -44,7 +45,7 @@ public class GewichtSensor extends SerialConnector {
                     System.out.println("Gewicht: " + getal); // deze laten zien in de output
                 }
             } catch (Exception e) {
-                //System.err.println(e.toString());
+                System.err.println(e.toString());
             }
         }
 

@@ -9,10 +9,10 @@ void loop() {
     {
       if (Serial.available() > 0) {
           Serial.readBytes(inputBuffer, Serial.available());
-          delay(1000);
+          delay(2000);
           Serial.print("I got this ->");
           Serial.print(inputBuffer);
-          Serial.println("<-");
+          Serial.print("<-\n");
       }
     }
 }

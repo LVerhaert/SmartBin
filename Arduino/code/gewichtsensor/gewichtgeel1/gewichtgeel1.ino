@@ -47,4 +47,5 @@ void loop() {
   Serial.print(scale.get_units(), 1); //scale.get_units() returns a float
   Serial.print(" g"); //You can change this to kg but you'll need to refactor the calibration_factor
   Serial.println();
+  delay(100);
 }
