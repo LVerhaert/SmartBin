@@ -3,21 +3,20 @@ package sensors;
 import gnu.io.SerialPortEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static javax.sound.sampled.LineEvent.Type.STOP;
 
 /**
  * Subklasse van SerialConnector. Deze klasse werkt correct als het losgelaten
- wordt op de inputStream van de Gewichtsensor.
+ * wordt op de inputStream van de Gewichtsensor.
  *
  * @author Ketura Seedorf, adapted from Liza Verhaert
  */
 public class GewichtSensor extends SerialConnector {
 
     // de gewichtwaarde die ik uit de inputLine haal
-    private static String gewicht = "";
-    private static Double getal;
+    private static String gewichtString = "";
+    private static Double gewicht = 0.0;
     // reguliere expressie die nodig is om de waarde van het gewicht uit de inputLine te halen:
-    // "0.0 g " is wat ik zoek, dus "-?(\\d)+.\\d g" één of meerdere keren
-    // achter elkaar
     // Zie https://www.vogella.com/tutorials/JavaRegularExpressions/article.html
     private final String REGEX = "-?(\\d)+.\\d g";
 
@@ -35,17 +34,21 @@ public class GewichtSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = inputStream.readLine();
-                Thread.sleep(500); // toegevoegd om de exception te voorkomen!
+                Thread.sleep(500);
                 System.out.println("Input: " + inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
-                    gewicht = matcher.group(); // wil ik deze opslaan in de variabele 
-                    gewicht = gewicht.substring(0, gewicht.length() - 2); // de twee laatste waarden van de string weghalen
-                    getal = Double.parseDouble(gewicht); // de string omzetten in een double
-                    System.out.println("Gewicht: " + getal); // deze laten zien in de output
+                    gewichtString = matcher.group(); // wil ik deze opslaan in de variabele 
+                    gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // de twee laatste waarden van de string weghalen
+                    gewicht = Double.parseDouble(gewichtString); // de string omzetten in een double
+                    System.out.println("Gewicht: " + gewicht + "g"); // deze laten zien in de output
+                    if (gewicht > 15.0) { // zodra de waarde groter is dan 15
+                        close(); // de gewichtsensor stoppen
+                        System.out.println("Gewicht is toegenomen.");
+                    }
                 }
             } catch (Exception e) {
-                System.err.println(e.toString());
+                //System.err.println(e.toString());
             }
         }
 
@@ -72,7 +75,7 @@ public class GewichtSensor extends SerialConnector {
         }
     }
 
-    public static String getGewicht() {
+    public static Double getGewicht() {
         return gewicht;
     }
 
