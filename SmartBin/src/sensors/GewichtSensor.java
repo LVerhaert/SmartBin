@@ -1,6 +1,9 @@
 package sensors;
 
 import gnu.io.SerialPortEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,8 +16,8 @@ import java.util.regex.Pattern;
 public class GewichtSensor extends SerialConnector {
 
     // de gewichtwaarde die ik uit de inputLine haal
-    private static String gewicht = "";
-    private static Double getal;
+    private static String gewichtString = "";
+    private static Double gewicht = 0.0;
     // reguliere expressie die nodig is om de waarde van het gewicht uit de inputLine te halen:
     // "0.0 g " is wat ik zoek, dus "-?(\\d)+.\\d g" één of meerdere keren
     // achter elkaar
@@ -35,14 +38,13 @@ public class GewichtSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = inputStream.readLine();
-                Thread.sleep(500); // toegevoegd om de exception te voorkomen!
                 System.out.println("Input: " + inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
-                    gewicht = matcher.group(); // wil ik deze opslaan in de variabele 
-                    gewicht = gewicht.substring(0, gewicht.length() - 2); // de twee laatste waarden van de string weghalen
-                    getal = Double.parseDouble(gewicht); // de string omzetten in een double
-                    System.out.println("Gewicht: " + getal); // deze laten zien in de output
+                    gewichtString = matcher.group(); // wil ik deze opslaan in de variabele 
+                    gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // de twee laatste waarden van de string weghalen
+                    gewicht = Double.parseDouble(gewichtString); // de string omzetten in een double
+                    System.out.println("Gewicht: " + gewicht); // deze laten zien in de output
                 }
             } catch (Exception e) {
                 System.err.println(e.toString());
@@ -72,8 +74,32 @@ public class GewichtSensor extends SerialConnector {
         }
     }
 
-    public static String getGewicht() {
+    public static double getGewicht() {
         return gewicht;
     }
 
+    public static void sendOutput(String outputMessage) {
+        GewichtSensor main = new GewichtSensor();
+        if (main.initialize(BAUD_RATE)) {
+            System.out.println("Java -> Gewichtsensor Arduino started");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GewichtSensor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                outputStream.write(outputMessage.getBytes());
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+            System.out.println(outputMessage);
+
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
 }

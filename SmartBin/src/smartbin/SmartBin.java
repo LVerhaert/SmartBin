@@ -32,7 +32,8 @@ public class SmartBin {
             gewicht3END     zet gewichtsensor 3 aan en geeft gewichtwaarden terug
             gewicht4END     zet gewichtsensor 4 aan en geeft gewichtwaarden terug
         */
-        SerialConnector.sendOutput("gewicht1END");
+//        SerialConnector.sendOutput("gewicht1END");
+        GewichtSensor.sendOutput("gewicht1END");
 
         // Ontvang input van het gewichtsensorprogramma
 //        GewichtSensor.receiveInput();
