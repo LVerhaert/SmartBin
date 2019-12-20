@@ -37,11 +37,10 @@ public class SerialConnector implements SerialPortEventListener {
     // bytes into characters making the displayed results codepage independent
     protected BufferedReader inputStream;
     // The output stream to the port
-    private static OutputStream outputStream;
+    protected static OutputStream outputStream;
     // Milliseconds to block while waiting for port open
     protected static final int TIME_OUT = 2000;
 
-//    private static String messageString = "color FF00FFEND";
     public boolean initialize(int DATA_RATE) {
 
         CommPortIdentifier portId = null;
