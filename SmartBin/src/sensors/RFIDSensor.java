@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 /**
  * Subklasse van SerialConnector. Deze klasse werkt alleen correct als deze
- losgelaten wordt op de inputStream van de RFIDSensor.
+ * losgelaten wordt op de inputStream van de RFIDSensor.
  *
  * @author Liza Verhaert, adapted from Unknown
  */
@@ -33,7 +33,7 @@ public class RFIDSensor extends SerialConnector {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = inputStream.readLine();
-               System.out.println(inputLine);
+                System.out.println(inputLine);
                 Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
                 while (matcher.find()) { // zolang er matches gevonden worden..
                     chipnr = matcher.group(); // sla ik deze op in de variabele chipnr
@@ -41,7 +41,7 @@ public class RFIDSensor extends SerialConnector {
                     System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
                     this.close(); // ik sluit de communicatie zodra ik klaar ben
                 }
-                
+
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
@@ -68,9 +68,6 @@ public class RFIDSensor extends SerialConnector {
             System.out.println("RFIDSensor Arduino -> Java started");
         }
     }
-
-
-
 
     public static String getChipnr() {
         return chipnr;

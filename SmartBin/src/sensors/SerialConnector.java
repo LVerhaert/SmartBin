@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author mechjesus
@@ -142,20 +144,22 @@ public class SerialConnector implements SerialPortEventListener {
         SerialConnector main = new SerialConnector();
         if (main.initialize(BAUD_RATE)) {
             System.out.println("Java -> Arduino started");
-
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+            }
             try {
                 outputStream.write(outputMessage.getBytes());
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
             System.out.println(outputMessage);
-
             try {
                 outputStream.close();
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
-            serialPort.close();
         }
     }
 }
