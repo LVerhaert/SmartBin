@@ -1,6 +1,7 @@
 package smartbin;
 
 import model.Afval;
+import model.Bak;
 import sensors.GewichtSensor;
 import sensors.KleurSensor;
 import sensors.RFIDSensor;
@@ -22,7 +23,7 @@ public class SmartBin {
         
         // De uiteindelijke functie die het hele programma gaat uitvoeren!
 //        while (true) {
-//             verwerkAfval(data);
+ //       verwerkAfval(data);
 //        }
 
         /* Stuur een commando naar de arduino
@@ -50,6 +51,7 @@ public class SmartBin {
         String afvaltype = "error";
         String baktype = "error";
         String chipnr = "";
+
         try {
             
             // Vind uit wat het chipnummer (de materiaalsoort dus) is

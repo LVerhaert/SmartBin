@@ -20,12 +20,12 @@ public class Data {
     private DBCommunicator dbcommunicator;
 
     public Data() {
-        System.out.println("Connecting to database...");
         dbcommunicator = new DBCommunicator();
+
         resetAfval();
         resetAfvalinbakken();
         resetBakken();
-        System.out.println(afval.size() + " afvalitems, " + bakken.size() + " bakken gevonden.");
+
     }
 
     private void resetAfval() {
@@ -37,13 +37,10 @@ public class Data {
                 int afvalnr = dbResult.getInt("afvalnr");
                 String chipnr = dbResult.getString("chipnr");
                 String afvaltype = dbResult.getString("afvaltype");
-                if (afvaltype.startsWith("glas")) {
-                    afvaltype = "glas";
-                }
                 int kleurr = dbResult.getInt("kleurr");
                 int kleurg = dbResult.getInt("kleurg");
                 int kleurb = dbResult.getInt("kleurb");
-                afval.add(new Afval(chipnr, afvaltype, kleurr, kleurg, kleurb));
+                afval.add(new Afval(/*afvalnr, */chipnr, afvaltype, kleurr, kleurg, kleurb));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
