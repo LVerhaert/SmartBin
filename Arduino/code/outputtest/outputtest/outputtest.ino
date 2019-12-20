@@ -12,7 +12,7 @@ void loop() {
           delay(2000);
           Serial.print("I got this ->");
           Serial.print(inputBuffer);
-          Serial.println("<-");
+          Serial.print("<-\n");
       }
     }
 }
