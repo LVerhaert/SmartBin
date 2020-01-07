@@ -1,9 +1,11 @@
 package smartbin;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Afval;
-import sensors.GewichtSensor;
-import sensors.KleurSensor;
-import sensors.RFIDSensor;
+//import sensors.GewichtSensor;
+//import sensors.KleurSensor;
+//import sensors.RFIDSensor;
 import sensors.SerialConnector;
 
 /**
@@ -18,11 +20,11 @@ public class SmartBin {
      */
     public static void main(String[] args) throws Exception {
         // Haal data uit de database en gebruik deze om de modelklassen te vullen
-//        Data data = new Data();
+        Data data = new Data();
         
         // De uiteindelijke functie die het hele programma gaat uitvoeren!
 //        while (true) {
-//             verwerkAfval(data);
+             verwerkAfval(data);
 //        }
 
         /* Stuur een commando naar de arduino
@@ -32,8 +34,15 @@ public class SmartBin {
             gewicht3END     zet gewichtsensor 3 aan en geeft gewichtwaarden terug
             gewicht4END     zet gewichtsensor 4 aan en geeft gewichtwaarden terug
         */
-//        SerialConnector.sendOutput("gewicht1END");
-        GewichtSensor.sendOutput("gewicht1END");
+//        SerialConnector.sendOutput("gewicht3END");
+//        SerialConnector.sendOutput("open1END");
+//        SerialConnector.sendOutput("dicht1END");
+//        SerialConnector.sendOutput("open2END");
+//        SerialConnector.sendOutput("dicht2END");
+//        SerialConnector.sendOutput("open3END");
+//        SerialConnector.sendOutput("dicht3END");
+//        SerialConnector.sendOutput("open4END");
+//        SerialConnector.sendOutput("dicht4END");
 
         // Ontvang input van het gewichtsensorprogramma
 //        GewichtSensor.receiveInput();
@@ -50,15 +59,17 @@ public class SmartBin {
         int baknr = 0;
         String afvaltype = "error";
         String baktype = "error";
-        String chipnr = "";
+        String chipnr;
+        SerialConnector.sendOutput("rfidEND");
         try {
-            
             // Vind uit wat het chipnummer (de materiaalsoort dus) is
-            RFIDSensor.receiveInput();
+//            RFIDSensor.receiveInput();
             do {
                 Thread.sleep(1000);
-                chipnr = RFIDSensor.getChipnr();
+                System.out.println("done sleeping..");
+                chipnr = SerialConnector.getChipnr();
             } while (chipnr.isEmpty());
+//            SerialConnector.sendOutput("stopEND");
             Afval afval = data.getAfvalViaChipnr(chipnr);
 
             // Als het materiaal "glas" is, moet worden gekeken of het wit of
@@ -79,7 +90,9 @@ public class SmartBin {
 
             SerialConnector.sendOutput("open" + baknr + "END"); // open de juiste bak
             SerialConnector.sendOutput("gewicht" + baknr + "END"); // zet de juiste gewichtsensor aan
-            SerialConnector.sendOutput("sluit" + baknr + "END"); // sluit de juiste bak
+//            GewichtSensor.receiveInput();
+            
+            SerialConnector.sendOutput("dicht" + baknr + "END"); // sluit de juiste bak
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }

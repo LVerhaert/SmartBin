@@ -74,9 +74,9 @@ public class GewichtSensor extends SerialConnector {
         }
     }
 
-    public static double getGewicht() {
-        return gewicht;
-    }
+//    public static double getGewicht() {
+//        return gewicht;
+//    }
 
     public static void sendOutput(String outputMessage) {
         GewichtSensor main = new GewichtSensor();

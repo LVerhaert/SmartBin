@@ -50,6 +50,7 @@ public class RFIDSensor extends SerialConnector {
 
     public static void receiveInput() throws Exception {
         RFIDSensor main = new RFIDSensor();
+        RFIDSensor.sendOutput("rfidEND");
         if (main.initialize(BAUD_RATE)) {
             Thread t = new Thread() {
                 @Override
@@ -72,8 +73,8 @@ public class RFIDSensor extends SerialConnector {
 
 
 
-    public static String getChipnr() {
-        return chipnr;
-    }
+//    public static String getChipnr() {
+//        return chipnr;
+//    }
 
 }

@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author mechjesus
@@ -31,6 +33,9 @@ public class SerialConnector implements SerialPortEventListener {
         "COM6", // Windows
     };
 
+    private static double gewicht;
+    private static String chipnr;
+    
     // Standard baud rate
     protected static final int BAUD_RATE = 9600;
     // A BufferedReader which will be fed by an InputStreamReader converting the
@@ -113,33 +118,44 @@ public class SerialConnector implements SerialPortEventListener {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = inputStream.readLine();
-                System.out.println(inputLine);
+                System.out.println("raw input: " + inputLine);
+                if (inputLine.startsWith("g")) {
+                    processGewicht(inputLine);
+                } else if (inputLine.startsWith("r")) {
+                    processRFID(inputLine);
+                    if (!chipnr.isEmpty()) {
+                        this.close();
+                    }
+                } else if (inputLine.startsWith("k")) {
+                    processKleur(inputLine);
+                    System.out.println(inputLine);
+                }
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
         }
     }
 
-    public static void receiveInput() throws Exception {
-        SerialConnector main = new SerialConnector();
-        if (main.initialize(BAUD_RATE)) {
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    // the following line will keep this app alive for 60 seconds,
-                    // waiting for events to occur and responding to them (printing
-                    // incoming messages to console).
-                    try {
-                        Thread.sleep(60000);
-                    } catch (InterruptedException e) {
-                        System.err.println(e.getMessage());
-                    }
-                }
-            };
-            t.start();
-            System.out.println("Arduino -> Java started");
-        }
-    }
+//    public static void receiveInput() throws Exception {
+//        SerialConnector main = new SerialConnector();
+//        if (main.initialize(BAUD_RATE)) {
+//            Thread t = new Thread() {
+//                @Override
+//                public void run() {
+//                    // the following line will keep this app alive for 60 seconds,
+//                    // waiting for events to occur and responding to them (printing
+//                    // incoming messages to console).
+//                    try {
+//                        Thread.sleep(60000);
+//                    } catch (InterruptedException e) {
+//                        System.err.println(e.getMessage());
+//                    }
+//                }
+//            };
+//            t.start();
+////            System.out.println("Arduino -> Java started");
+//        }
+//    }
 
     public static void sendOutput(String outputMessage) {
         SerialConnector main = new SerialConnector();
@@ -156,7 +172,7 @@ public class SerialConnector implements SerialPortEventListener {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
-            System.out.println(outputMessage);
+            System.out.println("Sending " + outputMessage + "...");
 
             try {
                 outputStream.close();
@@ -164,5 +180,44 @@ public class SerialConnector implements SerialPortEventListener {
                 System.err.println(e.getMessage());
             }
         }
+    }
+    
+    private void processGewicht(String inputLine) {
+        String gewichtString = "";
+        String REGEX = "-?(\\d)+.\\d g";
+        Pattern pattern = Pattern.compile(REGEX);
+        System.out.println("Input: " + inputLine);
+        Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
+        while (matcher.find()) { // zolang er matches gevonden worden..
+            gewichtString = matcher.group(); // wil ik deze opslaan in de variabele 
+            gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // de twee laatste waarden van de string weghalen
+            gewicht = Double.parseDouble(gewichtString); // de string omzetten in een double
+            System.out.println("Gewicht: " + gewicht); // deze laten zien in de output
+        }
+    }
+    
+    public static double getGewicht() {
+        return gewicht;
+    }
+    
+    private void processRFID(String inputLine) {
+        String REGEX = "(\\s0x[\\d\\w][\\d\\w])+";
+        Pattern pattern = Pattern.compile(REGEX);
+//        System.out.println(inputLine);
+        Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
+        while (matcher.find()) { // zolang er matches gevonden worden..
+            chipnr = matcher.group(); // sla ik deze op in de variabele chipnr
+            chipnr = chipnr.substring(1); // haal ik de eerste spatie weg
+            System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
+        }
+
+    }
+
+    public static String getChipnr() {
+        return chipnr;
+    }
+
+    private void processKleur(String inputLine) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
