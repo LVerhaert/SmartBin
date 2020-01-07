@@ -40,11 +40,11 @@ void loop() {
       Serial.print(inputString);
       Serial.print("<-\n");
     }
-    while (true) { // nadat de gewichtsensor geactiveerd is, toon elke 0.1 seconden de waarde die binnenkomt
+    while (true) { // nadat de gewichtsensor geactiveerd is, toon elke 0.5 seconden de waarde die binnenkomt
       Serial.print("Reading: ");
       Serial.print(scale.get_units(), 1);
       Serial.print(" g\n");
-      delay(100);
+      delay(500);
     }
   }
 }
