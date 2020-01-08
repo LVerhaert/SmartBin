@@ -6,19 +6,15 @@ package model;
  */
 public class Bak {
 
-    public static String getDekselpos;
-    
     private int baknr;
     private int gewichtsensor;
     private String dekselpos;
-    private String ledkleur;
     private String baktype;
-    
-    public Bak (int baknr, int gewichtsensor, String dekselpos, String ledkleur, String baktype) {
+
+    public Bak(int baknr, int gewichtsensor, String dekselpos, String baktype) {
         this.baknr = baknr;
         this.gewichtsensor = gewichtsensor;
         this.dekselpos = dekselpos;
-        this.ledkleur = ledkleur;
         this.baktype = baktype;
     }
 
@@ -45,7 +41,7 @@ public class Bak {
     public void setDekselpos(String dekselpos) {
         this.dekselpos = dekselpos;
     }
-    
+
     public void sluitDeksel() {
         if (dekselpos == "dicht") {
             System.out.println("Deksel van bak " + baknr + " is al dicht");
@@ -53,35 +49,12 @@ public class Bak {
             this.dekselpos = "dicht";
         }
     }
-    
+
     public void openDeksel() {
         if (dekselpos == "open") {
             System.out.println("Deksel van bak " + baknr + " is al open");
         } else {
             this.dekselpos = "open";
-        }
-    }
-
-    public String getLedkleur() {
-        return ledkleur;
-    }
-    
-    public boolean ledkleurIsGroen() {
-        if (this.ledkleur == "groen") {
-            return true;
-        }
-        return false;
-    }
-
-    public void setLedkleur(String ledkleur) {
-        this.ledkleur = ledkleur;
-    }
-    
-    public void veranderLedkleur() {
-        if (this.ledkleur == "rood") {
-            this.ledkleur = "groen";
-        } else {
-            this.ledkleur = "rood";
         }
     }
 

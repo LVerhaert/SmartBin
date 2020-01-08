@@ -13,9 +13,13 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import model.Afval;
+import smartbin.Data;
 
 /**
- * @author mechjesus
+ * @author mechjesus, edited by Liza Verhaert
  */
 public class SerialConnector implements SerialPortEventListener {
 
@@ -31,6 +35,13 @@ public class SerialConnector implements SerialPortEventListener {
         "COM6", // Windows
     };
 
+    private static double gewicht;
+    private static String chipnr = "";
+    private static int rood;
+    private static int groen;
+    private static int blauw;
+    private static boolean afvalVerwerkt = true;
+
     // Standard baud rate
     protected static final int BAUD_RATE = 9600;
     // A BufferedReader which will be fed by an InputStreamReader converting the
@@ -38,8 +49,8 @@ public class SerialConnector implements SerialPortEventListener {
     protected BufferedReader inputStream;
     // The output stream to the port
     protected static OutputStream outputStream;
-    // Milliseconds to block while waiting for port open
-    protected static final int TIME_OUT = 2000;
+    // Wait-time
+    protected static final int TIME_OUT = 1000;
 
     public boolean initialize(int DATA_RATE) {
 
@@ -81,9 +92,9 @@ public class SerialConnector implements SerialPortEventListener {
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
         } catch (PortInUseException e) {
-            System.err.println(e.toString());
+//            System.err.println(e.toString());
         } catch (IOException e) {
-            System.err.println(e.toString());
+//            System.err.println(e.toString());
         } catch (UnsupportedCommOperationException e) {
             System.err.println(e.toString());
         } catch (Exception e) {
@@ -96,7 +107,7 @@ public class SerialConnector implements SerialPortEventListener {
      * This should be called when you stop using the port. This will prevent
      * port locking on platforms like Linux.
      */
-    public synchronized void close() {
+    public static synchronized void close() {
         if (serialPort != null) {
             serialPort.removeEventListener();
             serialPort.close();
@@ -108,43 +119,35 @@ public class SerialConnector implements SerialPortEventListener {
      */
     @Override
     public synchronized void serialEvent(SerialPortEvent oEvent) {
-        if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-            try {
-                String inputLine = inputStream.readLine();
-                System.out.println(inputLine);
-            } catch (Exception e) {
-                System.err.println(e.toString());
-            }
-        }
-    }
-
-    public static void receiveInput() throws Exception {
-        SerialConnector main = new SerialConnector();
-        if (main.initialize(BAUD_RATE)) {
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    // the following line will keep this app alive for 60 seconds,
-                    // waiting for events to occur and responding to them (printing
-                    // incoming messages to console).
-                    try {
-                        Thread.sleep(60000);
-                    } catch (InterruptedException e) {
-                        System.err.println(e.getMessage());
+        try {
+            if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+                try {
+                    String inputLine = inputStream.readLine();
+                    if (inputLine.startsWith("g")) {
+                        processGewicht(inputLine.substring(1));
+                    } else if (inputLine.startsWith("r")) {
+                        processRFID(inputLine.substring(1));
+                    } else if (inputLine.startsWith("k")) {
+                        processKleur(inputLine.substring(1));
+                        System.out.println(inputLine);
+                    } else {
+                        System.out.println("    ARDUINO: " + inputLine);
                     }
+                } catch (Exception e) {
+                    System.err.println(e.toString());
                 }
-            };
-            t.start();
-            System.out.println("Arduino -> Java started");
+            }
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static void sendOutput(String outputMessage) {
         SerialConnector main = new SerialConnector();
         if (main.initialize(BAUD_RATE)) {
-            System.out.println("Java -> Arduino started");
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -153,12 +156,148 @@ public class SerialConnector implements SerialPortEventListener {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
-            System.out.println(outputMessage);
+            System.out.print("Sending \"" + outputMessage + "\"...     ");
+
             try {
                 outputStream.close();
+                System.out.println("Message sent.");
             } catch (IOException e) {
+                System.out.println();
                 System.err.println(e.getMessage());
             }
+
         }
+    }
+
+    private void processGewicht(String inputLine) {
+        String REGEX = "-?(\\d)+.\\d g";
+        Pattern pattern = Pattern.compile(REGEX);
+        Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
+        while (matcher.find()) { // zolang er matches gevonden worden..
+            String gewichtString = matcher.group(); // wil ik deze opslaan in de variabele 
+            gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // de twee laatste waarden van de string weghalen
+            gewicht = Double.parseDouble(gewichtString); // de string omzetten in een double
+            System.out.println("Gewicht: " + gewicht); // deze laten zien in de output
+        }
+    }
+
+    public static boolean isGewichtToegenomen() {
+        return (gewicht >= 18.0);
+    }
+
+    private void processRFID(String inputLine) {
+        String REGEX = "(\\s0x[\\d\\w][\\d\\w])+";
+        Pattern pattern = Pattern.compile(REGEX);
+        Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
+        while (matcher.find()) { // zolang er matches gevonden worden..
+            chipnr = matcher.group(); // sla ik deze op in de variabele chipnr
+            chipnr = chipnr.substring(1); // haal ik de eerste spatie weg
+            System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
+        }
+
+    }
+
+    // deze functie moet aangevuld worden met Duygu's code
+    private void processKleur(String inputLine) {
+        String REGEX = "R:\\d+,G:\\d+,B:\\d+";
+        String REGEXR = "R:\\d+";
+        String REGEXG = "G:\\d+";
+        String REGEXB = "B:\\d+";
+        Pattern pattern = Pattern.compile(REGEX);
+        Pattern patternR = Pattern.compile(REGEXR);
+        Pattern patternG = Pattern.compile(REGEXG);
+        Pattern patternB = Pattern.compile(REGEXB);
+        Matcher matcher = pattern.matcher(inputLine);
+        Matcher matcherR = patternR.matcher(inputLine);
+        Matcher matcherG = patternG.matcher(inputLine);
+        Matcher matcherB = patternB.matcher(inputLine);
+        while (matcher.find()) {
+            while (matcherR.find()) {
+                String roodString = matcherR.group();
+                rood = Integer.parseInt(roodString.substring(2));
+            }
+            while (matcherG.find()) {
+                String groenString = matcherG.group();
+                groen = Integer.parseInt(groenString.substring(2));
+            }
+            while (matcherB.find()) {
+                String blauwString = matcherB.group();
+                blauw = Integer.parseInt(blauwString.substring(2));
+            }
+            System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
+        }
+    }
+
+    // deze functie moet aangevuld worden met Duygu's code
+    private static boolean isWit() {
+        return false;
+    }
+
+    // deze functie moet aangevuld worden met Duygu's code
+    private static boolean isKleur() {
+        return false;
+    }
+
+    /**
+     * Werkt alleen met in de database bekende stukken afval. Work in progress..
+     */
+    public static void verwerkAfval(Data data) {
+        afvalVerwerkt = false; // bezig met deze functie (nodig ivm multithreading)
+
+        sendOutput("rfidEND"); // zet RFID-informatiestroom aan
+        while (chipnr.isEmpty()) { // wacht op het signaal
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        sendOutput("stopEND"); // zet RFID-informatiestroom uit
+        
+        Afval afval = data.getAfvalViaChipnr(chipnr);
+
+        // Als het materiaal "glas" is, moet worden gekeken of het wit of
+        // gekleurd glas is
+        if (afval.getAfvaltype().equals("glas")) {
+            sendOutput("kleurEND");
+        }
+        while (afval.getAfvaltype().equals("glas")) {
+            if (isWit()) {
+                afval.setAfvaltype("glas wit");
+            } else if (isKleur()) {
+                afval.setAfvaltype("glas kleur");
+            }
+        }
+
+        String afvaltype = afval.getAfvaltype(); // zoek afvaltype
+        String baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
+        int baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
+        System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype);
+
+        sendOutput("open" + baknr + "END"); // open de juiste bak
+        sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
+        while (!isGewichtToegenomen()) { // wacht op het signaal
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        sendOutput("stopEND"); // zet de gewichtinformatiestroom uit
+
+        sendOutput("dicht" + baknr + "END"); // sluit de juiste bak
+        try { // geef de Arduino de tijd om het deksel helemaal te sluiten
+            Thread.sleep(2500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        System.out.println("Verwerkt!"); // klaar!
+        
+        afvalVerwerkt = true; // klaar met deze functie (nodig ivm multithreading)
+    }
+
+    public static boolean afvalSysteemGereed() {
+        return afvalVerwerkt;
     }
 }
