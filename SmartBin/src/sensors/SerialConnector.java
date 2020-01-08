@@ -253,7 +253,7 @@ public class SerialConnector implements SerialPortEventListener {
             }
         }
         sendOutput("stopEND"); // zet RFID-informatiestroom uit
-        
+
         Afval afval = data.getAfvalViaChipnr(chipnr);
 
         // Als het materiaal "glas" is, moet worden gekeken of het wit of
@@ -273,9 +273,9 @@ public class SerialConnector implements SerialPortEventListener {
         String baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
         int baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
         System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype);
-
         sendOutput("open" + baknr + "END"); // open de juiste bak
         sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
+
         while (!isGewichtToegenomen()) { // wacht op het signaal
             try {
                 Thread.sleep(500);
@@ -287,17 +287,20 @@ public class SerialConnector implements SerialPortEventListener {
 
         sendOutput("dicht" + baknr + "END"); // sluit de juiste bak
         try { // geef de Arduino de tijd om het deksel helemaal te sluiten
-            Thread.sleep(2500);
+            Thread.sleep(2000);
         } catch (InterruptedException ex) {
             Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        System.out.println("Verwerkt!"); // klaar!
-        
+        System.out.println("Afval werwerkt!"); // klaar!
+
         afvalVerwerkt = true; // klaar met deze functie (nodig ivm multithreading)
+
     }
 
     public static boolean afvalSysteemGereed() {
         return afvalVerwerkt;
+
     }
+
 }

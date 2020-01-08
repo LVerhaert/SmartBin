@@ -20,26 +20,27 @@ public class Data {
     private DBCommunicator dbcommunicator;
 
     public Data() {
+        System.out.println("Connecting to database...");
         dbcommunicator = new DBCommunicator();
-
         resetAfval();
         resetAfvalinbakken();
         resetBakken();
+        System.out.println(afval.size() + " afvalitems, " + bakken.size() + " bakken gevonden."); // print het aantal afvalitems en afvalbakken
 
     }
 
     private void resetAfval() {
         afval = new ArrayList<>();
-        String strSQL = "select * from afval";
+        String strSQL = "select * from afval"; // haalt data uit de afval database
         ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
-                String chipnr = dbResult.getString("chipnr");
-                String afvaltype = dbResult.getString("afvaltype");
-                int kleurr = dbResult.getInt("kleurr");
-                int kleurg = dbResult.getInt("kleurg");
-                int kleurb = dbResult.getInt("kleurb");
-                afval.add(new Afval(/*afvalnr, */chipnr, afvaltype, kleurr, kleurg, kleurb));
+                String chipnr = dbResult.getString("chipnr"); // haalt het chipnummer(materiaal) van het afvalitem op
+                String afvaltype = dbResult.getString("afvaltype"); // haalt de type van het afvalitem op
+//                int kleurr = dbResult.getInt("kleurr");
+//                int kleurg = dbResult.getInt("kleurg");
+//                int kleurb = dbResult.getInt("kleurb");
+//                afval.add(new Afval(/*afvalnr, */chipnr, afvaltype, kleurr, kleurg, kleurb));
                 if (afvaltype.startsWith("glas")) {
                     afvaltype = "glas";
                 }

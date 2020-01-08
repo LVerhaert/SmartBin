@@ -28,15 +28,15 @@ public class SmartBin {
             kleurEND        haal de waarden van de kleursensor op
             stopEND         zet de RFID-, kleur- en gewichtinformatiestroom stop
          */
-//        SerialConnector.sendOutput("open1END");
-//        SerialConnector.sendOutput("dicht1END");
-
+        //       SerialConnector.sendOutput("open1END");
+        //      SerialConnector.sendOutput("dicht1END");
         // De uiteindelijke functie die het hele programma gaat uitvoeren!
-//        while (true) {
+        while (true) {
             if (SerialConnector.afvalSysteemGereed()) {
                 SerialConnector.verwerkAfval(data);
             }
 //        }
 
+        }
     }
 }
