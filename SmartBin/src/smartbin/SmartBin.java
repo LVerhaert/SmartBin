@@ -1,11 +1,5 @@
 package smartbin;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.Afval;
-//import sensors.GewichtSensor;
-//import sensors.KleurSensor;
-//import sensors.RFIDSensor;
 import sensors.SerialConnector;
 
 /**
@@ -21,82 +15,28 @@ public class SmartBin {
     public static void main(String[] args) throws Exception {
         // Haal data uit de database en gebruik deze om de modelklassen te vullen
         Data data = new Data();
-        
-        // De uiteindelijke functie die het hele programma gaat uitvoeren!
-//        while (true) {
-             verwerkAfval(data);
-//        }
 
         /* Stuur een commando naar de arduino
-        Op dit moment mogelijke commando's:
-            gewicht1END     zet gewichtsensor 1 aan en geeft gewichtwaarden terug
-            gewicht2END     zet gewichtsensor 2 aan en geeft gewichtwaarden terug
-            gewicht3END     zet gewichtsensor 3 aan en geeft gewichtwaarden terug
-            gewicht4END     zet gewichtsensor 4 aan en geeft gewichtwaarden terug
-        */
-//        SerialConnector.sendOutput("gewicht3END");
+        Mogelijke commando's:
+            gewicht1END     haal de gewichtwaarden van gewichtsensor 1 op
+            gewichtnEND     haal de gewichtwaarden van gewichtsensor n op
+            open1END        open deksel van bak 1
+            opennEND        open deksel van bak n
+            dicht1END       sluit deksel van bak 1
+            dichtnEND       sluit deksel van bak n
+            rfidEND         haal de waarden van de RFID-sensor op
+            kleurEND        haal de waarden van de kleursensor op
+            stopEND         zet de RFID-, kleur- en gewichtinformatiestroom stop
+         */
 //        SerialConnector.sendOutput("open1END");
 //        SerialConnector.sendOutput("dicht1END");
-//        SerialConnector.sendOutput("open2END");
-//        SerialConnector.sendOutput("dicht2END");
-//        SerialConnector.sendOutput("open3END");
-//        SerialConnector.sendOutput("dicht3END");
-//        SerialConnector.sendOutput("open4END");
-//        SerialConnector.sendOutput("dicht4END");
 
-        // Ontvang input van het gewichtsensorprogramma
-//        GewichtSensor.receiveInput();
-        // Ontvang input van het chipsensorprogramma
-//        RFIDSensor.receiveInput();
-        // Ontvang input van het kleursensorprogramma
-//        KleurSensor.receiveInput();
-    }
-
-    /**
-     * Werkt alleen met in de database bekende stukken afval. Work in progress..
-     */
-    private static void verwerkAfval(Data data) {
-        int baknr = 0;
-        String afvaltype = "error";
-        String baktype = "error";
-        String chipnr;
-        SerialConnector.sendOutput("rfidEND");
-        try {
-            // Vind uit wat het chipnummer (de materiaalsoort dus) is
-//            RFIDSensor.receiveInput();
-            do {
-                Thread.sleep(1000);
-                System.out.println("done sleeping..");
-                chipnr = SerialConnector.getChipnr();
-            } while (chipnr.isEmpty());
-//            SerialConnector.sendOutput("stopEND");
-            Afval afval = data.getAfvalViaChipnr(chipnr);
-
-            // Als het materiaal "glas" is, moet worden gekeken of het wit of
-            // gekleurd glas is
-//            while (afval.getAfvaltype().equals("glas")) {
-//                KleurSensor.receiveInput();
-//                Thread.sleep(1000);
-//                if (KleurSensor.isWit()) {
-//                    afval.setAfvaltype("glas wit");
-//                } else if (KleurSensor.isKleur()) {
-//                    afval.setAfvaltype("glas kleur");
-//                }
-//            }
-            
-            baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
-            baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
-            System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype); // tijdelijk, om te kijken of het werkt
-
-            SerialConnector.sendOutput("open" + baknr + "END"); // open de juiste bak
-            SerialConnector.sendOutput("gewicht" + baknr + "END"); // zet de juiste gewichtsensor aan
-//            GewichtSensor.receiveInput();
-            
-            SerialConnector.sendOutput("dicht" + baknr + "END"); // sluit de juiste bak
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-        }
+        // De uiteindelijke functie die het hele programma gaat uitvoeren!
+//        while (true) {
+            if (SerialConnector.afvalSysteemGereed()) {
+                SerialConnector.verwerkAfval(data);
+            }
+//        }
 
     }
-
 }

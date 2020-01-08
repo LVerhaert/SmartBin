@@ -1,36 +1,38 @@
 
-#include "HX711.h"
+#include <HX711.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_PN532.h>
+#include <Adafruit_TCS34725.h>
 #include <Servo.h>
 
+
+//Gewichtsensoren
+// gewichtsensor 1
+#define DOUT1 3
+#define CLK1  2
+// gewichtsensor 2
+#define DOUT2 5
+#define CLK2  4
+// gewichtsensor 3
+#define DOUT3 7
+#define CLK3  6
+// gewichtsensor 4
+#define DOUT4 9
+#define CLK4  8
+// alle gewichtsensoren
+HX711 scale;
 #define calibration_factor1 390.0
 #define calibration_factor2 380.0
 #define calibration_factor3 400.0
 #define calibration_factor4 380.0
 
-// gewichtsensor 1
-#define DOUT1  3
-#define CLK1  2
-// gewichtsensor 2
-#define DOUT2  5
-#define CLK2  4
-// gewichtsensor 3
-#define DOUT3  7
-#define CLK3  6
-// gewichtsensor 4
-#define DOUT4  9
-#define CLK4  8
-// alle gewichtsensoren
-HX711 scale;
-
 
 //RFID-sensor
-#define PN532_SCK  (10)
-#define PN532_MOSI (11)
-#define PN532_SS   (12)
-#define PN532_MISO (13)
+#define PN532_SCK  10
+#define PN532_MOSI 11
+#define PN532_SS   12
+#define PN532_MISO 13
 // GND -> GND, VCC -> 5V
 Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 #if defined(ARDUINO_ARCH_SAMD)
@@ -38,17 +40,24 @@ Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 #endif
 
 
+//Kleursensor
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
+// SDA -> A4
+// SCL -> A5
+// GND -> GND
+// VIN -> 5V
+
 //Servo's
-#define SERVO1 A1
-#define SERVO2 A2
-#define SERVO3 A3
-#define SERVO4 A4
+#define SERVO1 A0
+#define SERVO2 A1
+#define SERVO3 A2
+#define SERVO4 A3
 Servo servo;
 
 
 boolean scaleActive = false;
 boolean rfidActive = false;
-
+boolean kleurActive = false;
 
 
 // de input vanuit Java
@@ -61,7 +70,7 @@ void setup() {
 void loop() {
   if (Serial.available() > 0) { // als er input komt vanuit Java
     inputString = Serial.readStringUntil("END"); // lees de hele input (tot en met "END")
-    delay(2000);
+    delay(500);
     if (inputString.startsWith("gewicht")) { // als het een commando voor een gewichtsensor is
       int scaleNum = inputString.charAt(7) - '0'; // kijk voor welke gewichtsensor het commando precies is
       scaleActive = activateScale(scaleNum); // activeer deze sensor
@@ -73,7 +82,10 @@ void loop() {
     } else if (inputString.startsWith("dicht")) {
       int servoNum = inputString.charAt(5) - '0';
       closeLid(servoNum);
+    } else if (inputString.startsWith("kleur")) {
+      kleurActive = activateKleur();
     } else if (inputString.startsWith("stop")) {
+      kleurActive = false;
       scaleActive = false;
       rfidActive = false;
     } else { // als het een onbekend commando is, laat dan zien wat er precies ontvangen is
@@ -81,33 +93,36 @@ void loop() {
       Serial.print(inputString);
       Serial.print("<-\n");
     }
-    while (scaleActive) { // nadat de gewichtsensor geactiveerd is, toon elke 0.5 seconden de waarde die binnenkomt
-      Serial.print("gReading: ");
-      Serial.print(scale.get_units(), 1);
-      Serial.print(" g\n");
-      delay(500);
-    }
-    while (rfidActive) {
-      uint8_t success;
-      uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
-      uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
-  
-      // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
-      // 'uid' will be populated with the UID, and uidLength will indicate
-      // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
-      success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
-  
-      if (success) {
-        // Display some basic information about the card
-        //    Serial.print("Found an ISO14443A card\n");
-        //    Serial.print("  UID Length: ");Serial.print(uidLength, DEC);Serial.print(" bytes\n");
-        Serial.print("r  UID Value: ");
-        nfc.PrintHex(uid, uidLength);
-        Serial.print("\n");
-  
-      }
+  }
+  if (scaleActive) { // nadat de gewichtsensor geactiveerd is, toon elke 0.5 seconden de waarde die binnenkomt
+    Serial.print("gReading: ");
+    Serial.print(scale.get_units(), 1);
+    Serial.print(" g\n");
+    delay(500);
+  }
+  if (rfidActive) {
+    uint8_t success;
+    uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
+    uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+
+    success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
+
+    if (success) {
+      Serial.print("rUID Value: ");
+      nfc.PrintHex(uid, uidLength);
       rfidActive = false;
     }
+  }
+  if (kleurActive) {
+    float red, green, blue;
+
+    delay(100);  // takes 50ms to read
+    tcs.getRGB(&red, &green, &blue);
+
+    Serial.print("kR:"); Serial.print(int(red));
+    Serial.print(",G:"); Serial.print(int(green));
+    Serial.print(",B:"); Serial.print(int(blue));
+    Serial.print("\n");
   }
 }
 
@@ -138,8 +153,15 @@ boolean activateScale(int scaleNum) {
   return true;
 }
 
+boolean activateKleur() {
+  if (!tcs.begin()) {
+    Serial.println("No TCS34725 found ... check your connections");
+    return false;
+  }
+  return true;
+}
+
 boolean activateRFID() {
-  //setup
 #ifndef ESP8266
   while (!Serial); // for Leonardo/Micro/Zero
 #endif
@@ -152,14 +174,7 @@ boolean activateRFID() {
   if (! versiondata) {
     Serial.print("Didn't find PN53x board");
     return false;
-    while (1); // halt
   }
-  // Got ok data, print it out!
-  Serial.print("Found chip PN5"); Serial.print((versiondata >> 24) & 0xFF, HEX);
-  Serial.print("\n");
-  Serial.print("Firmware ver. "); Serial.print((versiondata >> 16) & 0xFF, DEC);
-  Serial.print('.'); Serial.print((versiondata >> 8) & 0xFF, DEC);
-  Serial.print("\n");
 
   // configure board to read RFID tags
   nfc.SAMConfig();
@@ -188,17 +203,12 @@ void openLid(int servoNum) {
     default:
       Serial.print("Servo " + String(servoNum) + " not found."); // als er een onbekend servonummer ingegeven is
   }
-//    for (pos = 20; pos >= 0; pos -= 1) { // goes from 20 degrees to 0 degrees
-//    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-//    delay(30);                       // waits 30ms for the servo to reach the position
-//  }
   int pos;
-  for (pos = 0; pos <= 20; pos += 1) { // goes from 0 degrees to 20 degrees
-    // in steps of 1 degree
+  for (pos = 0; pos <= 20; pos += 1) { // goes from 0 degrees to 20 degrees in steps of 1 degree
     servo.write(pos);              // tell servo to go to position in variable 'pos'
     delay(30);                       // waits 30ms for the servo to reach the position
   }
-
+  Serial.print("Servo activated.\n");
 }
 
 void closeLid(int servoNum) {
@@ -220,9 +230,9 @@ void closeLid(int servoNum) {
       Serial.print("Servo " + String(servoNum) + " not found."); // als er een onbekend servonummer ingegeven is
   }
   int pos;
-    for (pos = 20; pos >= 0; pos -= 1) { // goes from 20 degrees to 0 degrees
+  for (pos = 20; pos >= 0; pos -= 1) { // goes from 20 degrees to 0 degrees in steps of 1 degree
     servo.write(pos);              // tell servo to go to position in variable 'pos'
     delay(30);                       // waits 30ms for the servo to reach the position
   }
-
+  Serial.print("Servo activated.\n");
 }
