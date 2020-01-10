@@ -19,7 +19,7 @@ import model.Afval;
 import smartbin.Data;
 
 /**
- * @author mechjesus, edited by Liza Verhaert
+ * @author mechjesus, edited by Liza Verhaert, Ketura Seedorf and Duygu Tas
  */
 public class SerialConnector implements SerialPortEventListener {
 
@@ -174,10 +174,10 @@ public class SerialConnector implements SerialPortEventListener {
         Pattern pattern = Pattern.compile(REGEX);
         Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
         while (matcher.find()) { // zolang er matches gevonden worden..
-            String gewichtString = matcher.group(); // wil ik deze opslaan in de variabele 
-            gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // de twee laatste waarden van de string weghalen
-            gewicht = Double.parseDouble(gewichtString); // de string omzetten in een double
-            System.out.println("Gewicht: " + gewicht); // deze laten zien in de output
+            String gewichtString = matcher.group(); // worden deze opgeslagen in de variabele gewicht
+            gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // worden de twee laatste waarden van de string weghaald
+            gewicht = Double.parseDouble(gewichtString); // wordt de string omgezet in een double
+            System.out.println("Gewicht: " + gewicht); // wordt deze getoond in de output
         }
     }
 
@@ -273,8 +273,8 @@ public class SerialConnector implements SerialPortEventListener {
         String baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
         int baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
         System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype);
-        sendOutput("open" + baknr + "END"); // open de juiste bak
         sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
+        sendOutput("open" + baknr + "END"); // open de juiste bak
 
         while (!isGewichtToegenomen()) { // wacht op het signaal
             try {
@@ -284,17 +284,17 @@ public class SerialConnector implements SerialPortEventListener {
             }
         }
         sendOutput("stopEND"); // zet de gewichtinformatiestroom uit
-
         sendOutput("dicht" + baknr + "END"); // sluit de juiste bak
         try { // geef de Arduino de tijd om het deksel helemaal te sluiten
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException ex) {
             Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         System.out.println("Afval werwerkt!"); // klaar!
 
         afvalVerwerkt = true; // klaar met deze functie (nodig ivm multithreading)
+        chipnr = "";
+        gewicht = 0.0;
 
     }
 
