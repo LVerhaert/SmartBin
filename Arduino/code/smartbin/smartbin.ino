@@ -116,7 +116,7 @@ void loop() {
   if (kleurActive) {
     float red, green, blue;
 
-    delay(100);  // takes 50ms to read
+    delay(1000);  // takes 50ms to read
     tcs.getRGB(&red, &green, &blue);
 
     Serial.print("kR:"); Serial.print(int(red));
@@ -158,6 +158,15 @@ boolean activateKleur() {
     Serial.println("No TCS34725 found ... check your connections");
     return false;
   }
+  float red, green, blue;
+
+  delay(100);  // takes 50ms to read
+  tcs.getRGB(&red, &green, &blue);
+
+  Serial.print("kstartwaarde R:"); Serial.print(int(red));
+  Serial.print(",G:"); Serial.print(int(green));
+  Serial.print(",B:"); Serial.print(int(blue));
+  Serial.print("\n");
   return true;
 }
 

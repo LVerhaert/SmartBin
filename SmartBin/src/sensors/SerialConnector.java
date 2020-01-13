@@ -43,6 +43,8 @@ public class SerialConnector implements SerialPortEventListener {
     private static int startRood;
     private static int startGroen;
     private static int startBlauw;
+    private static boolean isWit = false;
+    private static boolean isKleur = false;
 
     private static boolean afvalVerwerkt = true;
 
@@ -135,7 +137,7 @@ public class SerialConnector implements SerialPortEventListener {
                         processRFID(inputLine.substring(1));
                     } else if (inputLine.startsWith("k")) {
                         processKleur(inputLine.substring(1));
-                        System.out.println(inputLine);
+//                        System.out.println(inputLine);
                     } else {
                         System.out.println("    ARDUINO: " + inputLine);
                     }
@@ -220,21 +222,6 @@ public class SerialConnector implements SerialPortEventListener {
         Matcher matcherG = patternG.matcher(inputLine);
         Matcher matcherB = patternB.matcher(inputLine);
         Matcher matcherstart = patternStart.matcher(inputLine);
-        while (matcher.find()) {
-            while (matcherR.find()) {
-                String roodString = matcherR.group();
-                rood = Integer.parseInt(roodString.substring(2));
-            }
-            while (matcherG.find()) {
-                String groenString = matcherG.group();
-                groen = Integer.parseInt(groenString.substring(2));
-            }
-            while (matcherB.find()) {
-                String blauwString = matcherB.group();
-                blauw = Integer.parseInt(blauwString.substring(2));
-            }
-            System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
-        }
         while (matcherstart.find()) {
 
             while (matcherR.find()) {
@@ -252,6 +239,35 @@ public class SerialConnector implements SerialPortEventListener {
             }
 
         }
+        while (matcher.find()) {
+            while (matcherR.find()) {
+                String roodString = matcherR.group();
+                rood = Integer.parseInt(roodString.substring(2));
+            }
+            while (matcherG.find()) {
+                String groenString = matcherG.group();
+                groen = Integer.parseInt(groenString.substring(2));
+            }
+            while (matcherB.find()) {
+                String blauwString = matcherB.group();
+                blauw = Integer.parseInt(blauwString.substring(2));
+            }
+        }
+        System.out.println(inputLine);
+        if (isWit()) {
+            isWit = true;
+            isKleur = false;
+            System.out.println("wit");
+        } else if (isKleur()) {
+            isKleur = true;
+            isWit = false;
+            System.out.println("kleur");
+        } else {
+            isKleur = false;
+            isWit = false;
+        }
+//        System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
+//        System.out.println("Startkleur: R:" + startRood + " G:" + startGroen + " B:" + startBlauw); // en wil ik deze laten zien in de output
     }
 
     public static boolean isWit() {
@@ -296,21 +312,40 @@ public class SerialConnector implements SerialPortEventListener {
         if (afval.getAfvaltype().equals("glas")) {
             sendOutput("kleurEND");
         }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+        }
         while (afval.getAfvaltype().equals("glas")) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (isWit()) {
                 afval.setAfvaltype("glas wit");
             } else if (isKleur()) {
                 afval.setAfvaltype("glas kleur");
             }
         }
+//        while (afval.getAfvaltype().equals("glas")) {
+//            if (isWit()) {
+//                afval.setAfvaltype("glas wit");
+//            } else if (isKleur()) {
+//                afval.setAfvaltype("glas kleur");
+//            }
+//        }
+
+        sendOutput("stopEND"); // zet RFID-informatiestroom uit
 
         String afvaltype = afval.getAfvaltype(); // zoek afvaltype
         String baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
         int baknr = data.getBak(baktype); // zoek welke bak dit baktype heeft
         System.out.println("Afval met type " + afvaltype + " in bak #" + baknr + " met type " + baktype);
 
-        sendOutput("open" + baknr + "END"); // open de juiste bak
         sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
+        sendOutput("open" + baknr + "END"); // open de juiste bak
         while (!isGewichtToegenomen()) { // wacht op het signaal
             try {
                 Thread.sleep(500);
@@ -322,7 +357,7 @@ public class SerialConnector implements SerialPortEventListener {
 
         sendOutput("dicht" + baknr + "END"); // sluit de juiste bak
         try { // geef de Arduino de tijd om het deksel helemaal te sluiten
-            Thread.sleep(2500);
+            Thread.sleep(3000);
         } catch (InterruptedException ex) {
             Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
         }

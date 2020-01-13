@@ -21,8 +21,8 @@ CREATE TABLE afvalinbak
 
 INSERT INTO afvalinbak VALUES ('gft','overig');
 INSERT INTO afvalinbak VALUES ('papier','overig');
-INSERT INTO afvalinbak VALUES ('glas kleur','glas wit');
-INSERT INTO afvalinbak VALUES ('glas wit','glas kleur');
+INSERT INTO afvalinbak VALUES ('glas kleur','glas kleur');
+INSERT INTO afvalinbak VALUES ('glas wit','glas wit');
 INSERT INTO afvalinbak VALUES ('blik','overig');
 INSERT INTO afvalinbak VALUES ('plastic','plastic');
 
