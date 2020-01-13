@@ -31,58 +31,45 @@ CREATE TABLE afval
 	(   afvalnr     INT PRIMARY KEY
 	  , chipnr      TEXT NOT NULL
 	  , afvaltype   TEXT NOT NULL
-	  , kleurR	INT
-	  , kleurG	INT
-	  , kleurB	INT
           , notes       TEXT
 	  , FOREIGN KEY (afvaltype) REFERENCES afvalinbak (afvaltype)
 	);
 
-INSERT INTO afval VALUES (1, '0x05 0x0B 0x8D 0xE0 0xE0 0x00 0x00','gft', null, null, null, 'Liza Afvalpas');
-INSERT INTO afval VALUES (2, '0xC7 0x75 0x55 0xA3','papier', null, null, null, 'Liza OV geel');
-INSERT INTO afval VALUES (3, '0x11 0xC3 0x9F 0x03','blik', null, null, null, 'Ketura OV geel ster');
-INSERT INTO afval VALUES (4, '0xD1 0x78 0x76 0x03','plastic', null, null, null, 'Ketura OV geel');
-INSERT INTO afval VALUES (5, '0x47 0x89 0x9E 0x27','glas kleur', 145, 34, 255, 'Ketura OV blauw');
-INSERT INTO afval VALUES (6, '0x47 0x89 0x9E 0x27','glas wit', 1, 1, 1, 'Ketura OV blauw');
+INSERT INTO afval VALUES (1, '0x05 0x0B 0x8D 0xE0 0xE0 0x00 0x00','gft', 'Liza Afvalpas');
+INSERT INTO afval VALUES (2, '0xC7 0x75 0x55 0xA3','papier', 'Liza OV geel');
+INSERT INTO afval VALUES (3, '0x11 0xC3 0x9F 0x03','blik', 'Ketura OV geel ster');
+INSERT INTO afval VALUES (4, '0xD1 0x78 0x76 0x03','plastic', 'Ketura OV geel');
+INSERT INTO afval VALUES (5, '0x47 0x89 0x9E 0x27','glas kleur', 'Ketura OV blauw');
+INSERT INTO afval VALUES (6, '0x47 0x89 0x9E 0x27','glas wit', 'Ketura OV blauw');
 
 
 CREATE TABLE bak
 	(   baknr         INT PRIMARY KEY
-	  , gewichtsensor INT NOT NULL UNIQUE
-	  , dekselpos     TEXT NOT NULL
-          , ledkleur      TEXT NOT NULL
 	  , baktype       TEXT UNIQUE NOT NULL
+          , afvalAantal   INT NOT NULL
 	  , FOREIGN KEY (baktype) REFERENCES baktype (type)
 	);
 
 INSERT INTO bak VALUES
 	( 1
-	  , 1
-	  ,'dicht'
-	  ,'rood'
 	  ,'plastic'
+          , 0
 	);
 
 INSERT INTO bak VALUES
 	( 2
-	  , 2
-	  ,'dicht'
-	  ,'rood'
 	  ,'glas wit'
+          , 0
 	);
 
 INSERT INTO bak VALUES
 	( 3
-	  , 3
-	  ,'dicht'
-	  ,'rood'
 	  ,'glas kleur'
+          , 0
 	);
 
 INSERT INTO bak VALUES
 	( 4
-	  , 4
-	  ,'dicht'
-	  ,'rood'
 	  ,'overig'
+          , 0
 	);

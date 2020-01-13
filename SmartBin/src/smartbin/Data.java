@@ -69,10 +69,9 @@ public class Data {
         try {
             while (dbResult.next()) {
                 int baknr = dbResult.getInt("baknr");
-                int gewichtsensor = dbResult.getInt("gewichtsensor");
-                String dekselpos = dbResult.getString("dekselpos");
                 String baktype = dbResult.getString("baktype");
-                bakken.add(new Bak(baknr, gewichtsensor, dekselpos, baktype));
+                int afvalaantal = dbResult.getInt("afvalaantal");
+                bakken.add(new Bak(baknr, baktype, afvalaantal));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -113,4 +112,18 @@ public class Data {
         return null;
     }
 
+    public void voegAfvalToeAanBak(int baknr) {
+        bakken.get(baknr-1).addAfval();
+        int afvalaantal = bakken.get(baknr-1).getAfvalaantal();
+        dbcommunicator = new DBCommunicator();
+        String strDML = "update bak set afvalaantal = " + afvalaantal + " where baknr = " + baknr;
+        dbcommunicator.executeDML(strDML);
+        System.out.println("In bak #" + baknr + " zitten nu " + afvalaantal + " stukken afval.");
+    }
+    
+    public void leegBakken() {
+        for (Bak bak : bakken) {
+            bak.setAfvalaantal(0);
+        }
+    }
 }

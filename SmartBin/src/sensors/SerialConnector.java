@@ -254,18 +254,18 @@ public class SerialConnector implements SerialPortEventListener {
             }
         }
         System.out.println(inputLine);
-        if (isWit()) {
-            isWit = true;
-            isKleur = false;
-            System.out.println("wit");
-        } else if (isKleur()) {
-            isKleur = true;
-            isWit = false;
-            System.out.println("kleur");
-        } else {
-            isKleur = false;
-            isWit = false;
-        }
+//        if (isWit()) {
+//            isWit = true;
+//            isKleur = false;
+//            System.out.println("wit");
+//        } else if (isKleur()) {
+//            isKleur = true;
+//            isWit = false;
+//            System.out.println("kleur");
+//        } else {
+//            isKleur = false;
+//            isWit = false;
+//        }
 //        System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
 //        System.out.println("Startkleur: R:" + startRood + " G:" + startGroen + " B:" + startBlauw); // en wil ik deze laten zien in de output
     }
@@ -329,13 +329,6 @@ public class SerialConnector implements SerialPortEventListener {
                 afval.setAfvaltype("glas kleur");
             }
         }
-//        while (afval.getAfvaltype().equals("glas")) {
-//            if (isWit()) {
-//                afval.setAfvaltype("glas wit");
-//            } else if (isKleur()) {
-//                afval.setAfvaltype("glas kleur");
-//            }
-//        }
 
         sendOutput("stopEND"); // zet RFID-informatiestroom uit
 
@@ -361,9 +354,12 @@ public class SerialConnector implements SerialPortEventListener {
         } catch (InterruptedException ex) {
             Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
+        data.voegAfvalToeAanBak(baknr);
 
         System.out.println("Verwerkt!"); // klaar!
         
+        chipnr = "";
+        gewicht = 0.0;
         afvalVerwerkt = true; // klaar met deze functie (nodig ivm multithreading)
     }
 

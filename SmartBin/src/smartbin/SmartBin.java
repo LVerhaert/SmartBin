@@ -15,7 +15,7 @@ public class SmartBin {
     public static void main(String[] args) throws Exception {
         // Haal data uit de database en gebruik deze om de modelklassen te vullen
         Data data = new Data();
-//        SerialConnector.sendOutput("kleurEND");
+        data.leegBakken();
         /* Stuur een commando naar de arduino
         Mogelijke commando's:
             gewicht1END     haal de gewichtwaarden van gewichtsensor 1 op
@@ -32,11 +32,11 @@ public class SmartBin {
 //        SerialConnector.sendOutput("dicht1END");
 
         // De uiteindelijke functie die het hele programma gaat uitvoeren!
-//        while (true) {
+        while (true) {
             if (SerialConnector.afvalSysteemGereed()) {
                 SerialConnector.verwerkAfval(data);
             }
-//        }
+        }
 
     }
 }
