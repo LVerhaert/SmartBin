@@ -40,6 +40,10 @@ public class SerialConnector implements SerialPortEventListener {
     private static int rood;
     private static int groen;
     private static int blauw;
+    private static int startRood;
+    private static int startGroen;
+    private static int startBlauw;
+
     private static boolean afvalVerwerkt = true;
 
     // Standard baud rate
@@ -205,14 +209,17 @@ public class SerialConnector implements SerialPortEventListener {
         String REGEXR = "R:\\d+";
         String REGEXG = "G:\\d+";
         String REGEXB = "B:\\d+";
+        String REGEXSTART = "startwaarde R:\\d+,G:\\d+,B:\\d+";
         Pattern pattern = Pattern.compile(REGEX);
         Pattern patternR = Pattern.compile(REGEXR);
         Pattern patternG = Pattern.compile(REGEXG);
         Pattern patternB = Pattern.compile(REGEXB);
+        Pattern patternStart = Pattern.compile(REGEXSTART);
         Matcher matcher = pattern.matcher(inputLine);
         Matcher matcherR = patternR.matcher(inputLine);
         Matcher matcherG = patternG.matcher(inputLine);
         Matcher matcherB = patternB.matcher(inputLine);
+        Matcher matcherstart = patternStart.matcher(inputLine);
         while (matcher.find()) {
             while (matcherR.find()) {
                 String roodString = matcherR.group();
@@ -228,15 +235,41 @@ public class SerialConnector implements SerialPortEventListener {
             }
             System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
         }
+        while (matcherstart.find()) {
+
+            while (matcherR.find()) {
+                String startR = matcherR.group(); // wil ik deze opslaan in de variabele kleurr    
+                startRood = Integer.parseInt(startR.substring(2));
+
+            }
+            while (matcherG.find()) {
+                String startG = matcherG.group(); // wil ik deze opslaan in de variabele kleurr    
+                startGroen = Integer.parseInt(startG.substring(2));
+            }
+            while (matcherB.find()) {
+                String startB = matcherB.group(); // wil ik deze opslaan in de variabele kleurr   
+                startBlauw = Integer.parseInt(startB.substring(2));
+            }
+
+        }
     }
 
-    // deze functie moet aangevuld worden met Duygu's code
-    private static boolean isWit() {
+    public static boolean isWit() {
+        if (rood <= startRood - 8 && rood >= startRood - 40
+                && groen >= startGroen - 5 && groen <= startGroen + 25
+                && blauw >= startBlauw + 5 && blauw <= startBlauw + 30) {
+            return true;
+        }
         return false;
     }
 
-    // deze functie moet aangevuld worden met Duygu's code
-    private static boolean isKleur() {
+    public static boolean isKleur() {
+        if ((rood <= startRood - 28 || rood >= startRood + 40
+                && groen <= startGroen - 25 || groen >= startGroen + 5
+                && blauw <= startBlauw || blauw >= startBlauw + 35)) {
+            return true;
+
+        }
         return false;
     }
 

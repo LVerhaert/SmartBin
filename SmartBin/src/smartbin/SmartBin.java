@@ -32,11 +32,11 @@ public class SmartBin {
 //        SerialConnector.sendOutput("dicht1END");
 
         // De uiteindelijke functie die het hele programma gaat uitvoeren!
-//        while (true) {
+        while (true) {
             if (SerialConnector.afvalSysteemGereed()) {
                 SerialConnector.verwerkAfval(data);
             }
-//        }
+        }
 
     }
 }

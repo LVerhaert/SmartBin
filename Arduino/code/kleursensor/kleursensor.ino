@@ -9,6 +9,15 @@ void setup() {
     Serial.println("No TCS34725 found ... check your connections");
     while (1); // halt!
   }
+  float red, green, blue;
+
+  delay(100);  // takes 50ms to read
+  tcs.getRGB(&red, &green, &blue);
+  
+  Serial.print("startwaarde R:"); Serial.print(int(red)); 
+  Serial.print(",G:"); Serial.print(int(green)); 
+  Serial.print(",B:"); Serial.print(int(blue));
+  Serial.print("\n");
 }
 
 void loop() {
