@@ -40,6 +40,12 @@ public class SerialConnector implements SerialPortEventListener {
     private static int rood;
     private static int groen;
     private static int blauw;
+    private static int startRood;
+    private static int startGroen;
+    private static int startBlauw;
+    private static boolean isWit = false;
+    private static boolean isKleur = false;
+
     private static boolean afvalVerwerkt = true;
 
     // Standard baud rate
@@ -129,7 +135,7 @@ public class SerialConnector implements SerialPortEventListener {
                         processRFID(inputLine.substring(1));
                     } else if (inputLine.startsWith("k")) {
                         processKleur(inputLine.substring(1));
-                        System.out.println(inputLine);
+//                        System.out.println(inputLine);
                     } else {
                         System.out.println("    ARDUINO: " + inputLine);
                     }
@@ -203,14 +209,34 @@ public class SerialConnector implements SerialPortEventListener {
         String REGEXR = "R:\\d+";
         String REGEXG = "G:\\d+";
         String REGEXB = "B:\\d+";
+        String REGEXSTART = "startwaarde R:\\d+,G:\\d+,B:\\d+";
         Pattern pattern = Pattern.compile(REGEX);
         Pattern patternR = Pattern.compile(REGEXR);
         Pattern patternG = Pattern.compile(REGEXG);
         Pattern patternB = Pattern.compile(REGEXB);
+        Pattern patternStart = Pattern.compile(REGEXSTART);
         Matcher matcher = pattern.matcher(inputLine);
         Matcher matcherR = patternR.matcher(inputLine);
         Matcher matcherG = patternG.matcher(inputLine);
         Matcher matcherB = patternB.matcher(inputLine);
+        Matcher matcherstart = patternStart.matcher(inputLine);
+        while (matcherstart.find()) {
+
+            while (matcherR.find()) {
+                String startR = matcherR.group(); // wil ik deze opslaan in de variabele kleurr    
+                startRood = Integer.parseInt(startR.substring(2));
+
+            }
+            while (matcherG.find()) {
+                String startG = matcherG.group(); // wil ik deze opslaan in de variabele kleurr    
+                startGroen = Integer.parseInt(startG.substring(2));
+            }
+            while (matcherB.find()) {
+                String startB = matcherB.group(); // wil ik deze opslaan in de variabele kleurr   
+                startBlauw = Integer.parseInt(startB.substring(2));
+            }
+
+        }
         while (matcher.find()) {
             while (matcherR.find()) {
                 String roodString = matcherR.group();
@@ -224,17 +250,40 @@ public class SerialConnector implements SerialPortEventListener {
                 String blauwString = matcherB.group();
                 blauw = Integer.parseInt(blauwString.substring(2));
             }
-            System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
         }
+        System.out.println(inputLine);
+//        if (isWit()) {
+//            isWit = true;
+//            isKleur = false;
+//            System.out.println("wit");
+//        } else if (isKleur()) {
+//            isKleur = true;
+//            isWit = false;
+//            System.out.println("kleur");
+//        } else {
+//            isKleur = false;
+//            isWit = false;
+//        }
+//        System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
+//        System.out.println("Startkleur: R:" + startRood + " G:" + startGroen + " B:" + startBlauw); // en wil ik deze laten zien in de output
     }
 
-    // deze functie moet aangevuld worden met Duygu's code
-    private static boolean isWit() {
+    public static boolean isWit() {
+        if (rood <= startRood - 8 && rood >= startRood - 40
+                && groen >= startGroen - 5 && groen <= startGroen + 25
+                && blauw >= startBlauw + 5 && blauw <= startBlauw + 30) {
+            return true;
+        }
         return false;
     }
 
-    // deze functie moet aangevuld worden met Duygu's code
-    private static boolean isKleur() {
+    public static boolean isKleur() {
+        if ((rood <= startRood - 28 || rood >= startRood + 40
+                && groen <= startGroen - 25 || groen >= startGroen + 5
+                && blauw <= startBlauw || blauw >= startBlauw + 35)) {
+            return true;
+
+        }
         return false;
     }
 
@@ -261,13 +310,25 @@ public class SerialConnector implements SerialPortEventListener {
         if (afval.getAfvaltype().equals("glas")) {
             sendOutput("kleurEND");
         }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+        }
         while (afval.getAfvaltype().equals("glas")) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (isWit()) {
                 afval.setAfvaltype("glas wit");
             } else if (isKleur()) {
                 afval.setAfvaltype("glas kleur");
             }
         }
+
+        sendOutput("stopEND"); // zet RFID-informatiestroom uit
 
         String afvaltype = afval.getAfvaltype(); // zoek afvaltype
         String baktype = data.getAfvalInWelkeBak(afvaltype); // zoek in welk baktype dit afvaltype moet
@@ -276,6 +337,8 @@ public class SerialConnector implements SerialPortEventListener {
         sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
         sendOutput("open" + baknr + "END"); // open de juiste bak
 
+        sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
+        sendOutput("open" + baknr + "END"); // open de juiste bak
         while (!isGewichtToegenomen()) { // wacht op het signaal
             try {
                 Thread.sleep(500);
@@ -291,7 +354,12 @@ public class SerialConnector implements SerialPortEventListener {
             Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Afval werwerkt!"); // klaar!
+        data.voegAfvalToeAanBak(baknr);
 
+        System.out.println("Verwerkt!"); // klaar!
+        
+        chipnr = "";
+        gewicht = 0.0;
         afvalVerwerkt = true; // klaar met deze functie (nodig ivm multithreading)
         chipnr = "";
         gewicht = 0.0;
