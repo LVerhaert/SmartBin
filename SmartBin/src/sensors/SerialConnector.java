@@ -45,7 +45,6 @@ public class SerialConnector implements SerialPortEventListener {
     private static int startBlauw;
     private static boolean isWit = false;
     private static boolean isKleur = false;
-
     private static boolean afvalVerwerkt = true;
 
     // Standard baud rate
@@ -79,7 +78,7 @@ public class SerialConnector implements SerialPortEventListener {
         }
 
         try {
-            // Open serial port, and use class name for the appName.
+            // Open serial port
             serialPort = (SerialPort) portId.open(this.getClass().getName(),
                     TIME_OUT);
 
@@ -98,7 +97,7 @@ public class SerialConnector implements SerialPortEventListener {
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
         } catch (PortInUseException e) {
-//            System.err.println(e.toString());
+            System.err.println(e.toString());
         } catch (IOException e) {
 //            System.err.println(e.toString());
         } catch (UnsupportedCommOperationException e) {
@@ -180,10 +179,10 @@ public class SerialConnector implements SerialPortEventListener {
         Pattern pattern = Pattern.compile(REGEX);
         Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
         while (matcher.find()) { // zolang er matches gevonden worden..
-            String gewichtString = matcher.group(); // worden deze opgeslagen in de variabele gewicht
-            gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // worden de twee laatste waarden van de string weghaald
-            gewicht = Double.parseDouble(gewichtString); // wordt de string omgezet in een double
-            System.out.println("Gewicht: " + gewicht); // wordt deze getoond in de output
+            String gewichtString = matcher.group(); // wil ik deze opslaan in de variabele gewicht
+            gewichtString = gewichtString.substring(0, gewichtString.length() - 2); // haal ik de twee laatste waarden weg
+            gewicht = Double.parseDouble(gewichtString); // zet ik de string om in een double
+            System.out.println("Gewicht: " + gewicht); // en wil ik deze laten zien in de output
         }
     }
 
@@ -196,14 +195,13 @@ public class SerialConnector implements SerialPortEventListener {
         Pattern pattern = Pattern.compile(REGEX);
         Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
         while (matcher.find()) { // zolang er matches gevonden worden..
-            chipnr = matcher.group(); // sla ik deze op in de variabele chipnr
+            chipnr = matcher.group(); // wil ik deze opslaan in de variabele chipnr
             chipnr = chipnr.substring(1); // haal ik de eerste spatie weg
             System.out.println("Chipnummer: " + chipnr); // en wil ik deze laten zien in de output
         }
 
     }
 
-    // deze functie moet aangevuld worden met Duygu's code
     private void processKleur(String inputLine) {
         String REGEX = "R:\\d+,G:\\d+,B:\\d+";
         String REGEXR = "R:\\d+";
@@ -215,25 +213,27 @@ public class SerialConnector implements SerialPortEventListener {
         Pattern patternG = Pattern.compile(REGEXG);
         Pattern patternB = Pattern.compile(REGEXB);
         Pattern patternStart = Pattern.compile(REGEXSTART);
-        Matcher matcher = pattern.matcher(inputLine);
+        Matcher matcher = pattern.matcher(inputLine); // laat de reguliere expressie los op de inputLine
         Matcher matcherR = patternR.matcher(inputLine);
         Matcher matcherG = patternG.matcher(inputLine);
         Matcher matcherB = patternB.matcher(inputLine);
         Matcher matcherstart = patternStart.matcher(inputLine);
-        while (matcherstart.find()) {
+        while (matcherstart.find()) { 
 
-            while (matcherR.find()) {
-                String startR = matcherR.group(); // wil ik deze opslaan in de variabele kleurr    
-                startRood = Integer.parseInt(startR.substring(2));
+            while (matcherR.find()) { // zolang er matches gevonden worden...
+                String startR = matcherR.group(); // wil ik deze opslaan in de variabele startR    
+                startRood = Integer.parseInt(startR.substring(2)); // haal ik 2 waarden weg
 
             }
             while (matcherG.find()) {
-                String startG = matcherG.group(); // wil ik deze opslaan in de variabele kleurr    
+                String startG = matcherG.group();
                 startGroen = Integer.parseInt(startG.substring(2));
+
             }
             while (matcherB.find()) {
-                String startB = matcherB.group(); // wil ik deze opslaan in de variabele kleurr   
-                startBlauw = Integer.parseInt(startB.substring(2));
+                String startB = matcherB.group();  
+                startBlauw = Integer.parseInt(startB.substring(2)); 
+
             }
 
         }
@@ -268,7 +268,7 @@ public class SerialConnector implements SerialPortEventListener {
 //        System.out.println("Startkleur: R:" + startRood + " G:" + startGroen + " B:" + startBlauw); // en wil ik deze laten zien in de output
     }
 
-    public static boolean isWit() {
+    public static boolean isWit() { // bepaalt wanneer een glas afvalitem wit is
         if (rood <= startRood - 8 && rood >= startRood - 40
                 && groen >= startGroen - 5 && groen <= startGroen + 25
                 && blauw >= startBlauw + 5 && blauw <= startBlauw + 30) {
@@ -277,7 +277,7 @@ public class SerialConnector implements SerialPortEventListener {
         return false;
     }
 
-    public static boolean isKleur() {
+    public static boolean isKleur() { // bepaalt wanneer een glas afvalitem kleur is
         if ((rood <= startRood - 28 || rood >= startRood + 40
                 && groen <= startGroen - 25 || groen >= startGroen + 5
                 && blauw <= startBlauw || blauw >= startBlauw + 35)) {
@@ -288,7 +288,7 @@ public class SerialConnector implements SerialPortEventListener {
     }
 
     /**
-     * Werkt alleen met in de database bekende stukken afval. Work in progress..
+     * Werkt alleen met in de database bekende stukken afval
      */
     public static void verwerkAfval(Data data) {
         afvalVerwerkt = false; // bezig met deze functie (nodig ivm multithreading)
@@ -337,8 +337,6 @@ public class SerialConnector implements SerialPortEventListener {
         sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
         sendOutput("open" + baknr + "END"); // open de juiste bak
 
-        sendOutput("gewicht" + baknr + "END"); // zet de informatiestroom van de juiste gewichtsensor aan
-        sendOutput("open" + baknr + "END"); // open de juiste bak
         while (!isGewichtToegenomen()) { // wacht op het signaal
             try {
                 Thread.sleep(500);
@@ -353,16 +351,13 @@ public class SerialConnector implements SerialPortEventListener {
         } catch (InterruptedException ex) {
             Logger.getLogger(SerialConnector.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Afval werwerkt!"); // klaar!
         data.voegAfvalToeAanBak(baknr);
 
-        System.out.println("Verwerkt!"); // klaar!
-        
-        chipnr = "";
-        gewicht = 0.0;
+        System.out.println("Afval werwerkt!"); // klaar!
+
+        chipnr = ""; // reset chipnr zodat een ander afvalitem gescant kan worden
+        gewicht = 0.0; // reset gewicht 
         afvalVerwerkt = true; // klaar met deze functie (nodig ivm multithreading)
-        chipnr = "";
-        gewicht = 0.0;
 
     }
 

@@ -5,7 +5,7 @@ import sensors.SerialConnector;
 /**
  * Main klasse
  *
- * @author Liza Verhaert
+ * @author Liza Verhaert, edited by Ketura Seedorf
  */
 public class SmartBin {
 
@@ -39,4 +39,4 @@ public class SmartBin {
 
         }
     }
-}
+
