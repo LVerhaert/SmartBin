@@ -9,7 +9,7 @@ import model.Bak;
 
 /**
  *
- * @author Liza Verhaert
+ * @author Liza Verhaert, edited by Ketura Seedorf and Duygu Tas
  */
 public class Data {
 
@@ -25,17 +25,18 @@ public class Data {
         resetAfval();
         resetAfvalinbakken();
         resetBakken();
-        System.out.println(afval.size() + " afvalitems, " + bakken.size() + " bakken gevonden.");
+        System.out.println("Database connection established: " + bakken.size() + " afvalbakken gevonden."); // print het aantal afvalbakken
+
     }
 
     private void resetAfval() {
         afval = new ArrayList<>();
-        String strSQL = "select * from afval";
+        String strSQL = "select * from afval"; // haalt data uit de database tabel 'afval'
         ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
-                String chipnr = dbResult.getString("chipnr");
-                String afvaltype = dbResult.getString("afvaltype");
+                String chipnr = dbResult.getString("chipnr"); // haalt het chipnummer van een afvalitem op
+                String afvaltype = dbResult.getString("afvaltype"); // haalt de afvaltype van een afvalitem op               
                 if (afvaltype.startsWith("glas")) {
                     afvaltype = "glas";
                 }
@@ -53,8 +54,8 @@ public class Data {
         ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
-                String afvaltype = dbResult.getString("afvaltype");
-                String baktype = dbResult.getString("baktype");
+                String afvaltype = dbResult.getString("afvaltype"); // haalt het afvaltype van een afvalitem op 
+                String baktype = dbResult.getString("baktype"); // haalt het afvaltype van een afvalbak op 
                 afvalinbakken.add(new AfvalInBak(afvaltype, baktype));
             }
         } catch (SQLException e) {
@@ -68,9 +69,9 @@ public class Data {
         ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
-                int baknr = dbResult.getInt("baknr");
-                String baktype = dbResult.getString("baktype");
-                int afvalaantal = dbResult.getInt("afvalaantal");
+                int baknr = dbResult.getInt("baknr"); // haalt het baknummer van een afvalbak op
+                String baktype = dbResult.getString("baktype"); // haalt het afvaltype van een afvalbak op
+                int afvalaantal = dbResult.getInt("afvalaantal"); // haalt het aantal afvalitems in een afvalbak op
                 bakken.add(new Bak(baknr, baktype, afvalaantal));
             }
         } catch (SQLException e) {
@@ -113,14 +114,14 @@ public class Data {
     }
 
     public void voegAfvalToeAanBak(int baknr) {
-        bakken.get(baknr-1).addAfval();
-        int afvalaantal = bakken.get(baknr-1).getAfvalaantal();
+        bakken.get(baknr - 1).addAfval();
+        int afvalaantal = bakken.get(baknr - 1).getAfvalaantal();
         dbcommunicator = new DBCommunicator();
         String strDML = "update bak set afvalaantal = " + afvalaantal + " where baknr = " + baknr;
         dbcommunicator.executeDML(strDML);
-        System.out.println("In bak #" + baknr + " zitten nu " + afvalaantal + " stukken afval.");
+        System.out.println("Aantal afvalitems in bak #" + baknr + ": " + afvalaantal);
     }
-    
+
     public void leegBakken() {
         for (Bak bak : bakken) {
             bak.setAfvalaantal(0);

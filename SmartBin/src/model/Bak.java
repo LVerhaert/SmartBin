@@ -9,7 +9,7 @@ public class Bak {
     private int baknr;
     private String baktype;
     private int afvalaantal;
-    private final int AFVALLIMIET = 4;
+    private final int AFVALLIMIET = 4; // stelt het maximale aantal afvalitems per afvalbak vast
 
     public Bak(int baknr, String baktype, int afvalaantal) {
         this.baknr = baknr;

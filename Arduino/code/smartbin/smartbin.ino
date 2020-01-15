@@ -41,11 +41,9 @@ Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 
 
 //Kleursensor
+//SDA -> A4, SCL -> A5, GND -> GND, VIN -> 5V
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
-// SDA -> A4
-// SCL -> A5
-// GND -> GND
-// VIN -> 5V
+
 
 //Servo's
 #define SERVO1 A0
@@ -74,20 +72,20 @@ void loop() {
     if (inputString.startsWith("gewicht")) { // als het een commando voor een gewichtsensor is
       int scaleNum = inputString.charAt(7) - '0'; // kijk voor welke gewichtsensor het commando precies is
       scaleActive = activateScale(scaleNum); // activeer deze sensor
-    } else if (inputString.startsWith("rfid")) {
-      rfidActive = activateRFID();
-    } else if (inputString.startsWith("open")) {
-      int servoNum = inputString.charAt(4) - '0';
-      openLid(servoNum);
+    } else if (inputString.startsWith("rfid")) { // als het een commando voor de rfidsensor is
+      rfidActive = activateRFID(); // activeer deze sensor
+    } else if (inputString.startsWith("open")) { // als het een commando voor een servo is
+      int servoNum = inputString.charAt(4) - '0'; // kijk voor welke servo het commando precies is
+      openLid(servoNum); // activeer deze servo
     } else if (inputString.startsWith("dicht")) {
       int servoNum = inputString.charAt(5) - '0';
-      closeLid(servoNum);
-    } else if (inputString.startsWith("kleur")) {
-      kleurActive = activateKleur();
-    } else if (inputString.startsWith("stop")) {
-      kleurActive = false;
-      scaleActive = false;
-      rfidActive = false;
+      closeLid(servoNum); // activeer deze servo
+    } else if (inputString.startsWith("kleur")) { // als het een commando voor de kleursensor is
+      kleurActive = activateKleur(); // activeer deze sensor
+    } else if (inputString.startsWith("stop")) { // als het een commando om processon stop te zetten is
+      kleurActive = false; //  stop de kleursensor
+      scaleActive = false; // stop de gewichtsensor
+      rfidActive = false; // stop de rfidsensor
     } else { // als het een onbekend commando is, laat dan zien wat er precies ontvangen is
       Serial.print("Error, I received this ->");
       Serial.print(inputString);
@@ -116,10 +114,10 @@ void loop() {
   if (kleurActive) {
     float red, green, blue;
 
-    delay(1000);  // takes 50ms to read
+    delay(1000);  // takes 1000ms to read
     tcs.getRGB(&red, &green, &blue);
 
-    Serial.print("kR:"); Serial.print(int(red));
+    Serial.print("R:"); Serial.print(int(red));
     Serial.print(",G:"); Serial.print(int(green));
     Serial.print(",B:"); Serial.print(int(blue));
     Serial.print("\n");
@@ -155,7 +153,7 @@ boolean activateScale(int scaleNum) {
 
 boolean activateKleur() {
   if (!tcs.begin()) {
-    Serial.println("No TCS34725 found ... check your connections");
+    Serial.println("No TCS34725 found ... check your connections"); // als de kleursensor niet aangesloten is
     return false;
   }
   float red, green, blue;
@@ -172,23 +170,22 @@ boolean activateKleur() {
 
 boolean activateRFID() {
 #ifndef ESP8266
-  while (!Serial); // for Leonardo/Micro/Zero
+  while (!Serial);
 #endif
   Serial.begin(9600);
-  Serial.print("Hello!\n");
 
   nfc.begin();
 
   uint32_t versiondata = nfc.getFirmwareVersion();
   if (! versiondata) {
-    Serial.print("Didn't find PN53x board");
+    Serial.print("Didn't find PN53x board"); // als de rfidsensor niet aangesloten is
     return false;
   }
 
   // configure board to read RFID tags
   nfc.SAMConfig();
 
-  Serial.print("Present card ...\n");
+  Serial.print("Presenteer afvalitem ...\n");
 
   return true;
 

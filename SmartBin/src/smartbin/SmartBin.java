@@ -5,7 +5,7 @@ import sensors.SerialConnector;
 /**
  * Main klasse
  *
- * @author Liza Verhaert
+ * @author Liza Verhaert, edited by Ketura Seedorf, Duygu Tas
  */
 public class SmartBin {
 
@@ -28,9 +28,8 @@ public class SmartBin {
             kleurEND        haal de waarden van de kleursensor op
             stopEND         zet de RFID-, kleur- en gewichtinformatiestroom stop
          */
-//        SerialConnector.sendOutput("open1END");
-//        SerialConnector.sendOutput("dicht1END");
-
+        //       SerialConnector.sendOutput("open1END");
+        //      SerialConnector.sendOutput("dicht1END");
         // De uiteindelijke functie die het hele programma gaat uitvoeren!
         while (true) {
             if (SerialConnector.afvalSysteemGereed()) {
@@ -38,5 +37,6 @@ public class SmartBin {
             }
         }
 
+        }
     }
-}
+
