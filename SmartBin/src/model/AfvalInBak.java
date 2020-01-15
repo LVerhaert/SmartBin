@@ -5,11 +5,11 @@ package model;
  * @author Liza Verhaert
  */
 public class AfvalInBak {
-    
+
     private String afvaltype;
     private String baktype;
-    
-    public AfvalInBak (String afvaltype, String baktype) {
+
+    public AfvalInBak(String afvaltype, String baktype) {
         this.afvaltype = afvaltype;
         this.baktype = baktype;
     }
@@ -29,6 +29,5 @@ public class AfvalInBak {
     public void setBaktype(String baktype) {
         this.baktype = baktype;
     }
-    
-    
+
 }

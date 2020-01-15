@@ -9,7 +9,7 @@ import javafx.scene.control.Alert.AlertType;
 /**
  * Deze klasse communiceert met de database
  *
- * @author aangepast door Liza Verhaert
+ * @author Jeroen Mutsters, edited by Liza Verhaert
  */
 public class DBCommunicator {
 

@@ -34,16 +34,12 @@ public class Data {
         ResultSet dbResult = dbcommunicator.getData(strSQL);
         try {
             while (dbResult.next()) {
-                int afvalnr = dbResult.getInt("afvalnr");
                 String chipnr = dbResult.getString("chipnr");
                 String afvaltype = dbResult.getString("afvaltype");
                 if (afvaltype.startsWith("glas")) {
                     afvaltype = "glas";
                 }
-                int kleurr = dbResult.getInt("kleurr");
-                int kleurg = dbResult.getInt("kleurg");
-                int kleurb = dbResult.getInt("kleurb");
-                afval.add(new Afval(chipnr, afvaltype, kleurr, kleurg, kleurb));
+                afval.add(new Afval(chipnr, afvaltype));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -73,11 +69,9 @@ public class Data {
         try {
             while (dbResult.next()) {
                 int baknr = dbResult.getInt("baknr");
-                int gewichtsensor = dbResult.getInt("gewichtsensor");
-                String dekselpos = dbResult.getString("dekselpos");
-                String ledkleur = dbResult.getString("ledkleur");
                 String baktype = dbResult.getString("baktype");
-                bakken.add(new Bak(baknr, gewichtsensor, dekselpos, ledkleur, baktype));
+                int afvalaantal = dbResult.getInt("afvalaantal");
+                bakken.add(new Bak(baknr, baktype, afvalaantal));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -88,23 +82,13 @@ public class Data {
         afval.add(a);
     }
 
-    public Afval getAfvalViaKleur(String kleur) {
-        for (Afval a : afval) {
-            if (kleur.equals(a.getKleur())) {
-                return a;
-            }
-        }
-        System.out.println("Geen afval met deze kleur gevonden.");
-        return null;
-    }
-
     public Afval getAfvalViaChipnr(String chipnr) {
         for (Afval a : afval) {
             if (chipnr.equals(a.getChipnr())) {
                 return a;
             }
         }
-        System.out.println("Geen afval met dit chipnummer gevonden.");
+        System.out.println("Geen afval met dit chipnummer (\"" + chipnr + "\") gevonden.");
         return null;
     }
 
@@ -114,7 +98,7 @@ public class Data {
                 return b.getBaknr();
             }
         }
-        System.out.println("Geen bak met dit type gevonden.");
+        System.out.println("Geen bak met dit type (\"" + baktype + "\") gevonden.");
         return 0;
     }
 
@@ -124,8 +108,22 @@ public class Data {
                 return aib.getBaktype();
             }
         }
-        System.out.println("Ik weet niet in welk baktype dit type afval moet.");
+        System.out.println("Ik weet niet in welk baktype dit type afval (\"" + afvaltype + "\") moet.");
         return null;
     }
 
+    public void voegAfvalToeAanBak(int baknr) {
+        bakken.get(baknr-1).addAfval();
+        int afvalaantal = bakken.get(baknr-1).getAfvalaantal();
+        dbcommunicator = new DBCommunicator();
+        String strDML = "update bak set afvalaantal = " + afvalaantal + " where baknr = " + baknr;
+        dbcommunicator.executeDML(strDML);
+        System.out.println("In bak #" + baknr + " zitten nu " + afvalaantal + " stukken afval.");
+    }
+    
+    public void leegBakken() {
+        for (Bak bak : bakken) {
+            bak.setAfvalaantal(0);
+        }
+    }
 }
