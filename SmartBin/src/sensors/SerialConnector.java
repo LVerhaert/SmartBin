@@ -365,5 +365,4 @@ public class SerialConnector implements SerialPortEventListener {
         return afvalVerwerkt;
 
     }
-
 }
