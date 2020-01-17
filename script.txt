@@ -3,51 +3,26 @@ drop table afvalinbak cascade;
 drop table afval cascade;
 drop table baktype cascade;
 
-CREATE TABLE baktype
-	(   type TEXT PRIMARY KEY
-	);
-
-INSERT INTO baktype VALUES ('plastic');
-INSERT INTO baktype VALUES ('overig');
-INSERT INTO baktype VALUES ('glas wit');
-INSERT INTO baktype VALUES ('glas kleur');
-
-
-CREATE TABLE afvalinbak
-	(   afvaltype TEXT PRIMARY KEY
-	  , baktype   TEXT NOT NULL
-	  , FOREIGN KEY (baktype) REFERENCES baktype (type)
-	);
-
-INSERT INTO afvalinbak VALUES ('gft','overig');
-INSERT INTO afvalinbak VALUES ('papier','overig');
-INSERT INTO afvalinbak VALUES ('glas kleur','glas kleur');
-INSERT INTO afvalinbak VALUES ('glas wit','glas wit');
-INSERT INTO afvalinbak VALUES ('blik','overig');
-INSERT INTO afvalinbak VALUES ('plastic','plastic');
-
 
 CREATE TABLE afval
-	(   afvalnr     INT PRIMARY KEY
-	  , chipnr      TEXT NOT NULL
-	  , afvaltype   TEXT NOT NULL
+	( chipnr        TEXT NOT NULL
+	  , afvaltype   TEXT PRIMARY KEY
           , notes       TEXT
-	  , FOREIGN KEY (afvaltype) REFERENCES afvalinbak (afvaltype)
 	);
 
-INSERT INTO afval VALUES (1, '0x05 0x0B 0x8D 0xE0 0xE0 0x00 0x00','gft', 'Liza Afvalpas');
-INSERT INTO afval VALUES (2, '0xC7 0x75 0x55 0xA3','papier', 'Liza OV geel');
-INSERT INTO afval VALUES (3, '0x11 0xC3 0x9F 0x03','blik', 'Ketura OV geel ster');
-INSERT INTO afval VALUES (4, '0xD1 0x78 0x76 0x03','plastic', 'Ketura OV geel');
-INSERT INTO afval VALUES (5, '0x47 0x89 0x9E 0x27','glas kleur', 'Ketura OV blauw');
-INSERT INTO afval VALUES (6, '0x47 0x89 0x9E 0x27','glas wit', 'Ketura OV blauw');
+INSERT INTO afval VALUES ('0x05 0x0B 0x8D 0xE0 0xE0 0x00 0x00','gft', 'Liza Afvalpas');
+INSERT INTO afval VALUES ('0xC7 0x75 0x55 0xA3','papier', 'Liza OV geel');
+INSERT INTO afval VALUES ('0x11 0xC3 0x9F 0x03','blik', 'Ketura OV geel ster');
+INSERT INTO afval VALUES ('0xD1 0x78 0x76 0x03','plastic', 'Ketura OV geel');
+INSERT INTO afval VALUES ('0x47 0x89 0x9E 0x27','glas kleur', 'Ketura OV blauw');
+INSERT INTO afval VALUES ('0x47 0x89 0x9E 0x27','glas wit', 'Ketura OV blauw');
+
 
 
 CREATE TABLE bak
-	(   baknr         INT PRIMARY KEY
-	  , baktype       TEXT UNIQUE NOT NULL
+	(   baknr         INT UNIQUE NOT NULL
+	  , baktype       TEXT PRIMARY KEY
           , afvalAantal   INT NOT NULL
-	  , FOREIGN KEY (baktype) REFERENCES baktype (type)
 	);
 
 INSERT INTO bak VALUES
@@ -73,3 +48,19 @@ INSERT INTO bak VALUES
 	  ,'overig'
           , 0
 	);
+
+
+CREATE TABLE afvalinbak
+	(   afvaltype TEXT UNIQUE NOT NULL
+	  , baktype   TEXT NOT NULL
+	  , FOREIGN KEY (afvaltype) REFERENCES afval(afvaltype)
+	  , FOREIGN KEY (baktype) REFERENCES bak (baktype)
+	);
+
+INSERT INTO afvalinbak VALUES ('gft','overig');
+INSERT INTO afvalinbak VALUES ('papier','overig');
+INSERT INTO afvalinbak VALUES ('glas kleur','glas kleur');
+INSERT INTO afvalinbak VALUES ('glas wit','glas wit');
+INSERT INTO afvalinbak VALUES ('blik','overig');
+INSERT INTO afvalinbak VALUES ('plastic','plastic');
+
