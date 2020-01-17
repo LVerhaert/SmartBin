@@ -19,7 +19,7 @@ import model.Afval;
 import smartbin.Data;
 
 /**
- * @author mechjesus, edited by Liza Verhaert, Ketura Seedorf and Duygu Tas
+ * @author mechjesus, edited by Liza Verhaert, Ketura Seedorf, Duygu Tas
  */
 public class SerialConnector implements SerialPortEventListener {
 
@@ -43,8 +43,6 @@ public class SerialConnector implements SerialPortEventListener {
     private static int startRood;
     private static int startGroen;
     private static int startBlauw;
-    private static boolean isWit = false;
-    private static boolean isKleur = false;
     private static boolean afvalVerwerkt = true;
 
     // Standard baud rate
@@ -186,7 +184,7 @@ public class SerialConnector implements SerialPortEventListener {
         }
     }
 
-    public static boolean isGewichtToegenomen() {
+    public static boolean isGewichtToegenomen() { 
         return (gewicht >= 18.0);
     }
 
@@ -252,20 +250,6 @@ public class SerialConnector implements SerialPortEventListener {
             }
         }
         System.out.println(inputLine);
-//        if (isWit()) {
-//            isWit = true;
-//            isKleur = false;
-//            System.out.println("wit");
-//        } else if (isKleur()) {
-//            isKleur = true;
-//            isWit = false;
-//            System.out.println("kleur");
-//        } else {
-//            isKleur = false;
-//            isWit = false;
-//        }
-//        System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
-//        System.out.println("Startkleur: R:" + startRood + " G:" + startGroen + " B:" + startBlauw); // en wil ik deze laten zien in de output
     }
 
     public static boolean isWit() { // bepaalt wanneer een glas afvalitem wit is
@@ -326,6 +310,8 @@ public class SerialConnector implements SerialPortEventListener {
             } else if (isKleur()) {
                 afval.setAfvaltype("glas kleur");
             }
+             System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
+             System.out.println("Startkleur: R:" + startRood + " G:" + startGroen + " B:" + startBlauw); // en wil ik deze laten zien in de output
         }
 
         sendOutput("stopEND"); // zet RFID-informatiestroom uit
