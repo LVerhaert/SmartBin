@@ -117,7 +117,7 @@ void loop() {
     delay(1000);  // takes 1000ms to read
     tcs.getRGB(&red, &green, &blue);
 
-    Serial.print("R:"); Serial.print(int(red));
+    Serial.print("kR:"); Serial.print(int(red));
     Serial.print(",G:"); Serial.print(int(green));
     Serial.print(",B:"); Serial.print(int(blue));
     Serial.print("\n");

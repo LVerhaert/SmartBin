@@ -43,6 +43,8 @@ public class SerialConnector implements SerialPortEventListener {
     private static int startRood;
     private static int startGroen;
     private static int startBlauw;
+    private static boolean isWit = false;
+    private static boolean isKleur = false;
     private static boolean afvalVerwerkt = true;
 
     // Standard baud rate
@@ -95,13 +97,13 @@ public class SerialConnector implements SerialPortEventListener {
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
         } catch (PortInUseException e) {
-            System.err.println(e.toString());
+  //          System.err.println(e.toString());
         } catch (IOException e) {
 //            System.err.println(e.toString());
         } catch (UnsupportedCommOperationException e) {
-            System.err.println(e.toString());
+            System.err.println("5" + e.toString());
         } catch (Exception e) {
-            System.err.println(e.toString());
+            System.err.println("3" + e.toString());
         }
         return true;
     }
@@ -137,7 +139,7 @@ public class SerialConnector implements SerialPortEventListener {
                         System.out.println("    ARDUINO: " + inputLine);
                     }
                 } catch (Exception e) {
-                    System.err.println(e.toString());
+  //                  System.err.println(e.toString());
                 }
             }
             Thread.sleep(200);
@@ -157,7 +159,7 @@ public class SerialConnector implements SerialPortEventListener {
             try {
                 outputStream.write(outputMessage.getBytes());
             } catch (IOException e) {
-                System.err.println(e.getMessage());
+                System.err.println("1" + e.getMessage());
             }
             System.out.print("Sending \"" + outputMessage + "\"...     ");
 
@@ -166,7 +168,7 @@ public class SerialConnector implements SerialPortEventListener {
                 System.out.println("Message sent.");
             } catch (IOException e) {
                 System.out.println();
-                System.err.println(e.getMessage());
+                System.err.println("2" + e.getMessage());
             }
 
         }
@@ -307,11 +309,14 @@ public class SerialConnector implements SerialPortEventListener {
             }
             if (isWit()) {
                 afval.setAfvaltype("glas wit");
+                sendOutput("stopEND");
             } else if (isKleur()) {
                 afval.setAfvaltype("glas kleur");
+                sendOutput("stopEND");
             }
              System.out.println("Kleur: R:" + rood + " G:" + groen + " B:" + blauw); // en wil ik deze laten zien in de output
              System.out.println("Startkleur: R:" + startRood + " G:" + startGroen + " B:" + startBlauw); // en wil ik deze laten zien in de output
+             
         }
 
         sendOutput("stopEND"); // zet RFID-informatiestroom uit
@@ -343,6 +348,11 @@ public class SerialConnector implements SerialPortEventListener {
 
         chipnr = ""; // reset chipnr zodat een ander afvalitem gescant kan worden
         gewicht = 0.0; // reset gewicht 
+        if (afvaltype.startsWith("glas")) {
+            afval.setAfvaltype("glas");
+            
+        }
+        
         afvalVerwerkt = true; // klaar met deze functie (nodig ivm multithreading)
 
     }
